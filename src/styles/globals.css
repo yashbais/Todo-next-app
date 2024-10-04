@@ -3,3 +3,13 @@
 @tailwind utilities;
 
 
+
+/* Custom scrollbar style */
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in webkit browsers */
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;  /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none;     /* Hide scrollbar in Firefox */
+}
