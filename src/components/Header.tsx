@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import React from 'react';
 import { Box, Title, Container } from '@mantine/core';
 
