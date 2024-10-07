@@ -1,7 +1,13 @@
 import '../styles/globals.css';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
-import Layout from '@/pages/Todo/Layout';
+import TodoApp from '@/pages/Todo/TodoApp';
+
+if (process.env.NEXT_PUBLIC_API_MOCKING === 'true') {
+  import('../mocks').then(({ setupMocks }) => {
+    setupMocks()
+  })
+}
 
 const theme = createTheme({
   fontFamily: 'Open Sans, sans-serif',
@@ -26,7 +32,7 @@ const theme = createTheme({
 const App = () => {
   return (
     <MantineProvider theme={theme}>
-      <Layout />
+      <TodoApp />
     </MantineProvider>
   );
 };

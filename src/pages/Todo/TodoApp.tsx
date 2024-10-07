@@ -7,7 +7,7 @@ import CommonModal from '../../components/utils/CommonModal';
 import CustomInput from '../../components/utils/CustomInput';
 import { Task } from '../../types/types'
 
-const Layout = () => {
+const TodoApp = () => {
     const [error, setError] = useState<string>("");
     const [task, setTask] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,6 +17,33 @@ const Layout = () => {
         setTask(e.target.value);
         setError("");
     };
+
+    const handleAdd = async () => {
+        if (task.trim() === "") {
+          setError("Task cannot be empty");
+          return; // Prevent adding the task
+        }
+    
+        try {
+          const response = await fetch('/api/create', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ todo: task }), // Sending task data as JSON
+          });
+    
+          if (response.ok) {
+            const createdTask = await response.json();
+            setTasks((prevTasks) => [...prevTasks, createdTask]);
+            setTask(""); // Reset the input
+          } else {
+            setError("Failed to add task");
+          }
+        } catch (error) {
+          setError("Failed to add task");
+        }
+      };
 
     return (
         <div className='bg-[#f0f2f5] flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
@@ -61,7 +88,9 @@ const Layout = () => {
                         <CustomButton
                             variant="filled"
                             color="customPurple"
-                            radius="md" >
+                            radius="md" 
+                            onClick={handleAdd}
+                            >
                             Add
                         </CustomButton>
 
@@ -76,4 +105,4 @@ const Layout = () => {
     );
 };
 
-export default Layout;
+export default TodoApp;

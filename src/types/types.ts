@@ -2,7 +2,9 @@ import { ButtonProps } from '@mantine/core';
 import { ReactNode } from 'react';
 
 export interface CustomButtonProps extends ButtonProps {
-  svgIcon?: React.ReactNode; // Optional prop for an SVG icon
+  svgIcon?: ReactNode; // Optional prop for an SVG icon
+  children: ReactNode;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>; // Ensure `onClick` is correctly typed
 }
 
 export interface Task {
