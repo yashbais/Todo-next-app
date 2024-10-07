@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/mocks/handlers.js", "src/mocks/handlers.js"  ],
   "exclude": [
     "node_modules"
   ]

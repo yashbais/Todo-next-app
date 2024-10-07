@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import ToDoList from '../../components/ToDoList';
 import { Title } from '@mantine/core';
@@ -12,7 +12,6 @@ const TodoApp = () => {
     const [task, setTask] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
 
-    // Handle input change for new task
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value);
         setError("");
@@ -20,30 +19,53 @@ const TodoApp = () => {
 
     const handleAdd = async () => {
         if (task.trim() === "") {
-          setError("Task cannot be empty");
-          return; // Prevent adding the task
+            setError("Task cannot be empty");
+            return;
         }
-    
+
         try {
-          const response = await fetch('/api/create', {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ todo: task }), // Sending task data as JSON
-          });
-    
-          if (response.ok) {
-            const createdTask = await response.json();
-            setTasks((prevTasks) => [...prevTasks, createdTask]);
-            setTask(""); // Reset the input
-          } else {
-            setError("Failed to add task");
-          }
+            const response = await fetch('/tasks', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ taskName: task }),
+            });
+
+            if (response.ok) {
+                const createdTask = await response.json();
+                setTasks((prevTasks) => [...prevTasks, createdTask]);
+                setTask("");
+            } else {
+                setError("Failed to add task");
+            }
         } catch (error) {
-          setError("Failed to add task");
+            setError("Failed to add task");
         }
-      };
+    };
+
+    // Fetch initial tasks from the mock API
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch("/tasks");
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setTasks(data);
+                } else {
+                    setTasks([]);
+                }
+            } else {
+                setTasks([]);
+            }
+        } catch (error) {
+            setTasks([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
 
     return (
         <div className='bg-[#f0f2f5] flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
@@ -88,9 +110,9 @@ const TodoApp = () => {
                         <CustomButton
                             variant="filled"
                             color="customPurple"
-                            radius="md" 
+                            radius="md"
                             onClick={handleAdd}
-                            >
+                        >
                             Add
                         </CustomButton>
 
@@ -99,7 +121,9 @@ const TodoApp = () => {
             </div>
 
             <div className="flex flex-col w-full lg:px-0 py-5">
-                <ToDoList />
+                <ToDoList
+                    tasks={tasks}
+                />
             </div>
         </div>
     );

@@ -26,3 +26,8 @@ export interface CustomInputProps {
   name: string;
   error?: string; 
 }
+
+export interface TodoListProps {
+  tasks: Task[];
+}
+
