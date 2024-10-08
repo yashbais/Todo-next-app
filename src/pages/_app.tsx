@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
-import TodoApp from '@/pages/Todo/TodoApp';
+import TodoApp from '@/pages/todo/TodoApp';
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'true') {
   import('../mocks').then(({ setupMocks }) => {
