@@ -1,5 +1,5 @@
 //  return capital letter of given string
-export const HandleCapitalFirstLetter = (str: string | null | undefined): string => {
+export const handleCapitalFirstLetter = (str: string | null | undefined): string => {
     if (str && str?.length > 0) {
       const splitedStr = str.split(' ')
       if(splitedStr?.length > 1){

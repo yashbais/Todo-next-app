@@ -16,6 +16,8 @@ export interface CommonModalProps {
   title: string;
   children: ReactNode;
   trigger: ReactNode; 
+  opened : boolean;
+  setOpened: (value: React.SetStateAction<boolean>) => void; 
 }
 
 export interface CustomInputProps {
@@ -29,5 +31,7 @@ export interface CustomInputProps {
 
 export interface TodoListProps {
   tasks: Task[];
+  setTasks: (tasks: Task[]) => void;
+  fetchTasks: () => Promise<void>; 
 }
 

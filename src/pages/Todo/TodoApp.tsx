@@ -11,6 +11,31 @@ const TodoApp = () => {
     const [error, setError] = useState<string>("");
     const [task, setTask] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [opened, setOpened] = useState(false);
+
+    // Fetch tasks from the mock API
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch("/tasks");
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    setTasks(data);
+                } else {
+                    setTasks([]);
+                }
+            } else {
+                setTasks([]);
+            }
+        } catch (error) {
+            setTasks([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
 
     const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTask(e.target.value);
@@ -36,6 +61,7 @@ const TodoApp = () => {
                 const createdTask = await response.json();
                 setTasks((prevTasks) => [...prevTasks, createdTask]);
                 setTask("");
+                setOpened(false)
             } else {
                 setError("Failed to add task");
             }
@@ -44,28 +70,6 @@ const TodoApp = () => {
         }
     };
 
-    // Fetch initial tasks from the mock API
-    const fetchTasks = async () => {
-        try {
-            const response = await fetch("/tasks");
-            if (response.ok) {
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    setTasks(data);
-                } else {
-                    setTasks([]);
-                }
-            } else {
-                setTasks([]);
-            }
-        } catch (error) {
-            setTasks([]);
-        }
-    };
-
-    useEffect(() => {
-        fetchTasks();
-    }, []);
 
     return (
         <div className='bg-[#f0f2f5] flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
@@ -76,6 +80,8 @@ const TodoApp = () => {
                     Task List
                 </Title>
                 <CommonModal
+                    setOpened={setOpened}
+                    opened={opened}
                     title="Add Task"
                     trigger={
                         <CustomButton
@@ -123,6 +129,8 @@ const TodoApp = () => {
             <div className="flex flex-col w-full lg:px-0 py-5">
                 <ToDoList
                     tasks={tasks}
+                    setTasks={setTasks}
+                    fetchTasks={fetchTasks}
                 />
             </div>
         </div>
