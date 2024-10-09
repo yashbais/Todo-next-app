@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Text } from '@mantine/core';
 import CustomButton from './CustomButton';
-import CommonModal from './CommonModal';
+import CommonModal from './CustomModal';
 import CustomInput from './CustomInput';
-import { handleCapitalFirstLetter } from './HandleCapitalFirstLetter';
+import { handleCapitalFirstLetter } from '../utils/HandleCapitalFirstLetter';
 import { Task, TodoListProps } from '../types/types';
 
 const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {

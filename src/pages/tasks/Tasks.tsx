@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
-import TodoList from '../../components/ToDoList';
+import TodoList from '../../components/TodoList';
 import { Title } from '@mantine/core';
 import CustomButton from '../../components/CustomButton';
-import CommonModal from '../../components/CommonModal';
+import CustomModal from '../../components/CustomModal';
 import CustomInput from '../../components/CustomInput';
 import { Task } from '../../types/types'
 
@@ -84,7 +84,7 @@ const Tasks = () => {
                 <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                     Task List
                 </Title>
-                <CommonModal
+                <CustomModal
                     setOpened={setOpened}
                     opened={opened}
                     title="Add Task"
@@ -128,7 +128,7 @@ const Tasks = () => {
                         </CustomButton>
 
                     </div>
-                </CommonModal>
+                </CustomModal>
             </div>
 
             <div className="flex flex-col w-full lg:px-0 py-5">
