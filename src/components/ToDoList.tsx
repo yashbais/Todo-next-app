@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Text } from '@mantine/core';
-import CustomButton from '../components/utils/CustomButton';
-import CommonModal from '../components/utils/CommonModal';
-import CustomInput from '../components/utils/CustomInput';
-import { handleCapitalFirstLetter } from '../components/utils/HandleCapitalFirstLetter';
+import CustomButton from './CustomButton';
+import CommonModal from './CommonModal';
+import CustomInput from './CustomInput';
+import { handleCapitalFirstLetter } from './HandleCapitalFirstLetter';
 import { Task, TodoListProps } from '../types/types';
 
-const ToDoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
     const [singleTask, setSingleTask] = useState<Task | null>(null);
     const [error, setError] = useState<string>("");
@@ -43,7 +43,6 @@ const ToDoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
     const handleDelete = async (taskId: number) => {
         setTaskType("Delete")
         setOpenedTaskId(taskId);
-        fetchSingleTask(taskId);
     }
 
     const handleUpdate = async () => {
@@ -63,14 +62,7 @@ const ToDoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
 
             if (response.ok) {
                 const updatedTask: Task = await response.json();
-
                 fetchTasks()
-
-                // setTasks((prevTasks: Task[]) => {
-                //     const filteredTasks = prevTasks.filter((task: Task) => task.id !== updatedTask.id);
-                //     return [...filteredTasks, updatedTask]; 
-                // });
-
                 setOpenedTaskId(null);
                 setTaskType("")
 
@@ -83,13 +75,13 @@ const ToDoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
     };
 
     const handleDeleteData = async () => {
-        if (!singleTask) {
+        if (!openedTaskId) {
             setError("No task selected");
             return;
         }
 
         try {
-            const response = await fetch(`/tasks/${singleTask.id}`, {
+            const response = await fetch(`/tasks/${openedTaskId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -220,4 +212,4 @@ const ToDoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
     );
 };
 
-export default ToDoList;
+export default TodoList;

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
-import ToDoList from '../../components/ToDoList';
+import TodoList from '../../components/ToDoList';
 import { Title } from '@mantine/core';
-import CustomButton from '../../components/utils/CustomButton';
-import CommonModal from '../../components/utils/CommonModal';
-import CustomInput from '../../components/utils/CustomInput';
+import CustomButton from '../../components/CustomButton';
+import CommonModal from '../../components/CommonModal';
+import CustomInput from '../../components/CustomInput';
 import { Task } from '../../types/types'
 
-const TodoApp = () => {
+const Tasks = () => {
     const [error, setError] = useState<string>("");
     const [task, setTask] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -19,6 +19,7 @@ const TodoApp = () => {
             const response = await fetch("/tasks");
             if (response.ok) {
                 const data = await response.json();
+                console.log(data,"data")
                 if (Array.isArray(data)) {
                     setTasks(data);
                 } else {
@@ -28,12 +29,15 @@ const TodoApp = () => {
                 setTasks([]);
             }
         } catch (error) {
+            console.log(error,"error data")
             setTasks([]);
         }
     };
 
     useEffect(() => {
-        fetchTasks();
+        setTimeout(()=>{
+            fetchTasks();
+        },1000)
     }, []);
 
 
@@ -59,7 +63,8 @@ const TodoApp = () => {
 
             if (response.ok) {
                 const createdTask = await response.json();
-                setTasks((prevTasks) => [...prevTasks, createdTask]);
+                // setTasks((prevTasks) => [...prevTasks, createdTask]);
+                fetchTasks();
                 setTask("");
                 setOpened(false)
             } else {
@@ -127,7 +132,7 @@ const TodoApp = () => {
             </div>
 
             <div className="flex flex-col w-full lg:px-0 py-5">
-                <ToDoList
+                <TodoList
                     tasks={tasks}
                     setTasks={setTasks}
                     fetchTasks={fetchTasks}
@@ -137,4 +142,4 @@ const TodoApp = () => {
     );
 };
 
-export default TodoApp;
+export default Tasks;

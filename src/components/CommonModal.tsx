@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from '@mantine/core';
-import { CommonModalProps } from '../../types/types'
+import { CommonModalProps } from '../types/types'
 
 
 const CommonModal = ({ title, children, trigger,opened,setOpened }: CommonModalProps) => {

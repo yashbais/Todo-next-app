@@ -1,5 +1,5 @@
 import React from "react";
-import {CustomInputProps} from '../../types/types'
+import {CustomInputProps} from '../types/types'
 const CustomInput: React.FC<CustomInputProps> = ({
   type,
   placeholder,
