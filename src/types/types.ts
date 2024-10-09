@@ -2,6 +2,15 @@ import { ButtonProps } from '@mantine/core';
 import { ReactNode ,InputHTMLAttributes} from 'react';
 import { UseFormRegister } from "react-hook-form";
 
+export type childrenType = ReactNode;
+
+export interface IFormProps<T> {
+    defaultValues?: Partial<T>;
+    children?: childrenType;
+    buttonLabel?: string;
+    onSubmit: (data: T) => void;
+    handleSubmit: any
+}
 export interface CustomButtonProps extends ButtonProps {
   svgIcon?: ReactNode; // Optional prop for an SVG icon
   children: ReactNode;

@@ -1,15 +1,5 @@
-import { ReactNode } from "react";
 import { Button } from "@mantine/core";
-
-export type childrenType = ReactNode;
-
-export interface IFormProps<T> {
-    defaultValues?: Partial<T>;
-    children?: childrenType;
-    buttonLabel?: string;
-    onSubmit: (data: T) => void;
-    handleSubmit: any
-}
+import { IFormProps } from '../types/types'
 
 const Form = <T,>({
     buttonLabel = "Submit",
