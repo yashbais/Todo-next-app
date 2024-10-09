@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 export interface CustomButtonProps extends ButtonProps {
   svgIcon?: ReactNode; // Optional prop for an SVG icon
   children: ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>; // Ensure `onClick` is correctly typed
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export interface Task {
@@ -35,3 +35,7 @@ export interface TodoListProps {
   fetchTasks: () => Promise<void>; 
 }
 
+
+export interface TaskName {
+  taskName: string; 
+}

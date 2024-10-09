@@ -116,7 +116,9 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
                             <div className="flex flex-col sm:flex-row sm:items-center w-full">
                                 <div className="p-2 flex-1">
                                     <Text color="dimmed">Task {index + 1}</Text>
-                                    <Text size="md">{handleCapitalFirstLetter(task?.taskName)}</Text>
+                                    <Text size="md">{task?.taskName}</Text>
+                                    
+                                    {/* <Text size="md">{handleCapitalFirstLetter(task?.taskName)}</Text> */}
                                 </div>
                             </div>
 
