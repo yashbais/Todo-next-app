@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import Form from "../../components/Form";
 import Input from "../../components/InputText";
@@ -7,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import taskSchema from '../../schema/taskSchema';
 import { TaskName } from '../../types/types';
 import { useRouter } from 'next/router'
+import { Title } from '@mantine/core';
 
 const New = ({ fetchTasks, setOpened }: any) => {
     const router = useRouter()
@@ -19,7 +19,6 @@ const New = ({ fetchTasks, setOpened }: any) => {
     });
 
     const handleAdd = async (data: TaskName) => {
-        // with yup validation
         try {
             const response = await fetch('/tasks', {
                 method: "POST",
@@ -51,6 +50,11 @@ const New = ({ fetchTasks, setOpened }: any) => {
     return (
         <div className={`${!fetchTasks && 'flex items-center justify-center min-h-screen'}`}>
             <div className={`${!fetchTasks && 'w-full max-w-md bg-white p-6 rounded-lg shadow-md'}`}>
+                {!fetchTasks &&
+                    <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
+                        Add Task
+                    </Title>
+                }
                 <Form
                     buttonLabel="Add"
                     handleSubmit={handleSubmit}

@@ -4,15 +4,13 @@ import TodoList from '../../components/TodoList';
 import { Title } from '@mantine/core';
 import CustomButton from '../../components/CustomButton';
 import CustomModal from '../../components/CustomModal';
-import CustomInput from '../../components/CustomInput';
 import { Task, TaskName } from '../../types/types'
 import New from './New';
 
 const Tasks = () => {
-    const [error, setError] = useState<string>("");
-    const [task, setTask] = useState<string>("");
     const [tasks, setTasks] = useState<Task[]>([]);
     const [opened, setOpened] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Fetch tasks from the mock API
     const fetchTasks = async () => {
@@ -29,55 +27,20 @@ const Tasks = () => {
             } else {
                 setTasks([]);
             }
+            setLoading(false)
         } catch (error) {
             console.log(error, "error data")
             setTasks([]);
+            setLoading(false)
         }
     };
 
     useEffect(() => {
         setTimeout(() => {
             fetchTasks();
+            setLoading(false)
         }, 1000)
     }, []);
-
-
-    // const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setTask(e.target.value);
-    //     setError("");
-    // };
-
-
-     // without yup validations
-    // const handleAdd = async () => {
-    //     if (task.trim() === "") {
-    //         setError("Task cannot be empty");
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch('/tasks', {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({ taskName: task }),
-    //         });
-
-    //         if (response.ok) {
-    //             const createdTask = await response.json();
-    //             fetchTasks();
-    //             setTask("");
-    //             setOpened(false)
-    //         } else {
-    //             setError("Failed to add task");
-    //         }
-    //     } catch (error) {
-    //         setError("Failed to add task");
-    //     }
-    // };
-
-
 
     return (
         <div className='bg-[#f0f2f5] flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
@@ -87,55 +50,6 @@ const Tasks = () => {
                 <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                     Task List
                 </Title>
-                {/* without validation */}
-
-                {/* <CustomModal
-                    setOpened={setOpened}
-                    opened={opened}
-                    title="Add Task"
-                    trigger={
-                        <CustomButton
-                            variant="filled"
-                            color="customPurple"
-                            radius="md"
-                            svgIcon={
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 32 32"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                >
-                                    <path d="M14.5,14.501l-10.502,0c-0.828,0 -1.5,0.673 -1.5,1.5c0,0.828 0.672,1.5 1.5,1.5l10.502,0l-0.001,10.502c0,0.828 0.672,1.5 1.5,1.501c0.828,-0 1.5,-0.673 1.5,-1.5l0.001,-10.503l10.502,0c0.828,0 1.5,-0.672 1.5,-1.5c0,-0.827 -0.672,-1.5 -1.5,-1.5l-10.502,0l0.001,-10.501c-0,-0.828 -0.672,-1.501 -1.5,-1.501c-0.828,0 -1.5,0.672 -1.5,1.5l-0.001,10.502Z" />
-                                </svg>
-                            }
-                        >
-                            Add Task
-                        </CustomButton>
-                    }
-                >
-                    <div className="mt-4 flex justify-center item-center flex-col  ">
-                        <CustomInput
-                            placeholder="Add task..."
-                            value={task}
-                            onChange={handleTaskChange}
-                            name="task"
-                            type="text"
-                            error={error}
-                        />
-                        <CustomButton
-                            variant="filled"
-                            color="customPurple"
-                            radius="md"
-                            onClick={handleAdd}
-                        >
-                            Add
-                        </CustomButton>
-
-                    </div>
-                </CustomModal> */}
-
-                {/* with validation */}
 
                 <CustomModal
                     setOpened={setOpened}
@@ -163,20 +77,23 @@ const Tasks = () => {
                     }
                 >
                     <div className="mt-4 flex justify-center item-center flex-col  ">
-                        <New 
-                        fetchTasks={fetchTasks}
-                        setOpened={setOpened}
+                        <New
+                            fetchTasks={fetchTasks}
+                            setOpened={setOpened}
                         />
                     </div>
                 </CustomModal>
             </div>
 
             <div className="flex flex-col w-full lg:px-0 py-5">
-                <TodoList
-                    tasks={tasks}
-                    setTasks={setTasks}
-                    fetchTasks={fetchTasks}
-                />
+                {loading ? (
+                    <p className='flex justify-center items-center'>Loading....</p>
+                ) : (
+                    <TodoList
+                        tasks={tasks}
+                        fetchTasks={fetchTasks}
+                    />
+                )}
             </div>
         </div>
     );

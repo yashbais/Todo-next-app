@@ -1,5 +1,6 @@
 import { ButtonProps } from '@mantine/core';
-import { ReactNode } from 'react';
+import { ReactNode ,InputHTMLAttributes} from 'react';
+import { UseFormRegister } from "react-hook-form";
 
 export interface CustomButtonProps extends ButtonProps {
   svgIcon?: ReactNode; // Optional prop for an SVG icon
@@ -31,11 +32,17 @@ export interface CustomInputProps {
 
 export interface TodoListProps {
   tasks: Task[];
-  setTasks: (tasks: Task[]) => void;
   fetchTasks: () => Promise<void>; 
 }
 
-
 export interface TaskName {
   taskName: string; 
+}
+
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  name: string;
+  type: string;
+  label?: string;
+  error?: string;
+  register: UseFormRegister<any>;
 }

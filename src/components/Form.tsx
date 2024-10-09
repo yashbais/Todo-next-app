@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, ReactNode } from "react";
-import { UseFormHandleSubmit } from "react-hook-form";
+import { ReactNode } from "react";
 import { Button } from "@mantine/core";
 
 export type childrenType = ReactNode;

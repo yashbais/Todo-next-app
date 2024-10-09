@@ -2,77 +2,23 @@ import React, { useState } from 'react';
 import { Text } from '@mantine/core';
 import CustomButton from './CustomButton';
 import CommonModal from './CustomModal';
-import CustomInput from './CustomInput';
-import { handleCapitalFirstLetter } from '../utils/HandleCapitalFirstLetter';
-import { Task, TodoListProps } from '../types/types';
+import { TodoListProps } from '../types/types';
+import { useRouter } from 'next/router'
 
-const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks,fetchTasks }) => {
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
-    const [singleTask, setSingleTask] = useState<Task | null>(null);
     const [error, setError] = useState<string>("");
     const [taskType, setTaskType] = useState("");
-
-    const fetchSingleTask = async (id: number) => {
-        setSingleTask(null);  // Clear previous task data when opening a new modal
-        try {
-            const response = await fetch(`/tasks/${id}`);
-            if (response.ok) {
-                const data = await response.json();
-                setSingleTask(data);
-            } else {
-                console.log("Failed to fetch task data");
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    const router = useRouter()
 
     const handleEdit = (taskId: number) => {
-        setOpenedTaskId(taskId);
-        fetchSingleTask(taskId);
-        setTaskType("Edit")
-    };
-
-    const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (singleTask) {
-            setSingleTask({ ...singleTask, taskName: e.target.value });
-            setError("");
-        }
+        router.push(`tasks/${taskId}/edit`)
     };
 
     const handleDelete = async (taskId: number) => {
         setTaskType("Delete")
         setOpenedTaskId(taskId);
     }
-
-    const handleUpdate = async () => {
-        if (singleTask?.taskName.trim() === "") {
-            setError("Task cannot be empty");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/tasks/${singleTask?.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ taskName: singleTask?.taskName }),
-            });
-
-            if (response.ok) {
-                const updatedTask: Task = await response.json();
-                fetchTasks()
-                setOpenedTaskId(null);
-                setTaskType("")
-
-            } else {
-                setError("Failed to update task");
-            }
-        } catch (error) {
-            setError("Failed to update task");
-        }
-    };
 
     const handleDeleteData = async () => {
         if (!openedTaskId) {
@@ -100,8 +46,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
         }
     };
 
-
-
     return (
         <div className="h-96 overflow-y-auto scrollbar-none">
             {!tasks.length ? (
@@ -117,8 +61,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
                                 <div className="p-2 flex-1">
                                     <Text color="dimmed">Task {index + 1}</Text>
                                     <Text size="md">{task?.taskName}</Text>
-                                    
-                                    {/* <Text size="md">{handleCapitalFirstLetter(task?.taskName)}</Text> */}
                                 </div>
                             </div>
 
@@ -127,7 +69,10 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
                                     variant="filled"
                                     color="lime"
                                     radius="md"
-                                    onClick={() => handleEdit(task.id)}
+                                    onClick={() =>
+                                        handleEdit(task.id)
+
+                                    }
                                     svgIcon={
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -164,48 +109,25 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, setTasks, fetchTasks }) => {
                                 </CustomButton>
                             </div>
 
-                            {/* Modal for editing and deleting task */}
+                            {/* Modal for deleting task */}
                             <CommonModal
                                 setOpened={(open) => setOpenedTaskId(open ? task.id : null)}
                                 opened={openedTaskId === task.id}
                                 title={`${taskType} Task`}
                                 trigger={<></>}
                             >
-                                {taskType == "Edit" ? <>
-                                    <div className="mt-4 flex justify-center item-center flex-col  ">
-                                        <CustomInput
-                                            placeholder="Task..."
-                                            value={singleTask?.taskName || ''}
-                                            onChange={handleTaskChange}
-                                            name="task"
-                                            type="text"
-                                            error={error}
-                                        />
-                                        <CustomButton
-                                            variant="filled"
-                                            color="customPurple"
-                                            radius="md"
-                                            onClick={handleUpdate}
-                                        >
-                                            Update
-                                        </CustomButton>
-                                    </div>
-                                </> : taskType == "Delete" && <>
-                                    <div className="mt-4 flex justify-center item-center flex-col  ">
-                                        <p className="pb-4 text-center">Are you sure you want to delete the task?</p>
-                                        <CustomButton
-                                            variant="filled"
-                                            color="red"
-                                            radius="md"
-                                            onClick={handleDeleteData}
-                                        >
-                                            Delete
-                                        </CustomButton>
-                                    </div></>}
-
+                                <div className="mt-4 flex justify-center item-center flex-col  ">
+                                    <p className="pb-4 text-center">Are you sure you want to delete the task?</p>
+                                    <CustomButton
+                                        variant="filled"
+                                        color="red"
+                                        radius="md"
+                                        onClick={handleDeleteData}
+                                    >
+                                        Delete
+                                    </CustomButton>
+                                </div>
                             </CommonModal>
-
-
                         </div>
                     ))}
                 </div>
