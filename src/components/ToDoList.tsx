@@ -8,9 +8,11 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
 const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks }) => {
-    const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
-    const [taskType, setTaskType] = useState("");
     const router = useRouter()
+    
+    const [taskType, setTaskType] = useState("");
+    const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
+
 
     const handleEdit = (taskId: number) => {
         router.push(`tasks/${taskId}/edit`)
@@ -68,7 +70,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks }) => {
                                     radius="md"
                                     onClick={() =>
                                         handleEdit(task.id)
-
                                     }
                                     svgIcon={
                                         <svg

@@ -3,13 +3,21 @@ import axios from 'axios';
 import { Title } from '@mantine/core';
 import { Task } from '../../types/types';
 import Header from '../../components/Header';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TodoList from '../../components/TodoList';
 import React, { useState, useEffect } from 'react';
 import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
 
+
+const fetchAllTasks = () => {
+    return axios.get("/tasks")
+}
+
 const Tasks = () => {
+
+    const queryClient = useQueryClient()
+
     const [opened, setOpened] = useState(false);
     const [queryEnabled, setQueryEnabled] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -24,7 +32,7 @@ const Tasks = () => {
 
     const { data, error, isError, isLoading, isFetching, refetch } = useQuery({
         queryKey: ['tasks'],
-        queryFn: () => axios.get("/tasks"),
+        queryFn: fetchAllTasks,
         enabled: queryEnabled, // The query will run only when queryEnabled is true
     });
 
@@ -35,7 +43,11 @@ const Tasks = () => {
     }, [data]);
 
     const handleRefetch = async (): Promise<void> => {
-        await refetch(); 
+        // refetch the entire data or
+        // await refetch(); 
+
+        // invalidate the previously cached data 
+        queryClient.invalidateQueries({ queryKey: ['tasks'] })
     };
 
     if (isError) {
@@ -81,6 +93,7 @@ const Tasks = () => {
                         <New fetchTasks={handleRefetch} setOpened={setOpened} />
                     </div>
                 </CustomModal>
+
             </div>
 
             {isLoading || isFetching ? (

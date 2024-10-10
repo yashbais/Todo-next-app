@@ -12,6 +12,7 @@ import axios from 'axios';
 
 const New = ({ fetchTasks, setOpened }: any) => {
     const router = useRouter();
+    
     const {
         handleSubmit,
         formState: { errors },
