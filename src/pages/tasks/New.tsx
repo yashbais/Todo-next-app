@@ -5,11 +5,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import taskSchema from '../../schema/taskSchema';
 import { TaskName } from '../../types/types';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import { Title } from '@mantine/core';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
 const New = ({ fetchTasks, setOpened }: any) => {
-    const router = useRouter()
+    const router = useRouter();
     const {
         handleSubmit,
         formState: { errors },
@@ -18,43 +20,37 @@ const New = ({ fetchTasks, setOpened }: any) => {
         resolver: yupResolver(taskSchema),
     });
 
-    const handleAdd = async (data: TaskName) => {
-        try {
-            const response = await fetch('/tasks', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ...data }),
-            });
-
-            if (response.ok) {
-                const createdTask = await response.json();
-                if (fetchTasks) {
-                    // if this is inside modal
-                    fetchTasks()
-                    setOpened(false)
-                } else {
-                    // if this from url
-                    router.push('/')
-                }
+    const mutation = useMutation({
+        mutationFn: (newTask: TaskName) => {
+            return axios.post('/tasks', newTask); 
+        },
+        onSuccess: (data) => {
+            // If fetchTasks is available, refetch tasks and close the modal
+            if (fetchTasks) {
+                fetchTasks();
+                setOpened(false);
+            } else {
+                // Navigate to the home page if task is created from a URL route
+                router.push('/');
             }
-        } catch (error) {
-            console.log(error)
-        }
-    };
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        },
+    });
 
     const onSubmit: SubmitHandler<TaskName> = (data) => {
-        handleAdd({ ...data })
+        mutation.mutate(data);
     };
+
     return (
         <div className={`${!fetchTasks && 'flex items-center justify-center min-h-screen'}`}>
             <div className={`${!fetchTasks && 'w-full max-w-md bg-white p-6 rounded-lg shadow-md'}`}>
-                {!fetchTasks &&
+                {!fetchTasks && (
                     <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                         Add Task
                     </Title>
-                }
+                )}
                 <Form
                     buttonLabel="Add"
                     handleSubmit={handleSubmit}
@@ -72,8 +68,6 @@ const New = ({ fetchTasks, setOpened }: any) => {
                 </Form>
             </div>
         </div>
-
-
     );
 };
 

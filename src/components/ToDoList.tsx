@@ -4,10 +4,11 @@ import CustomButton from './CustomButton';
 import CommonModal from './CustomModal';
 import { TodoListProps } from '../types/types';
 import { useRouter } from 'next/router'
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 
-const TodoList: React.FC<TodoListProps> = ({ tasks,fetchTasks }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks }) => {
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
-    const [error, setError] = useState<string>("");
     const [taskType, setTaskType] = useState("");
     const router = useRouter()
 
@@ -20,30 +21,26 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,fetchTasks }) => {
         setOpenedTaskId(taskId);
     }
 
+    const mutation = useMutation({
+        mutationFn: (id: number) => {
+            return axios.delete(`/tasks/${id}`);
+        },
+        onSuccess: () => {
+            fetchTasks()
+            setOpenedTaskId(null);
+            setTaskType("")
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        },
+    });
+
     const handleDeleteData = async () => {
         if (!openedTaskId) {
-            setError("No task selected");
             return;
         }
 
-        try {
-            const response = await fetch(`/tasks/${openedTaskId}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (response.ok) {
-                fetchTasks();
-                setOpenedTaskId(null);
-                setTaskType("")
-            } else {
-                setError("Failed to delete task");
-            }
-        } catch (error) {
-            setError("Failed to delete task");
-        }
+        mutation.mutate(openedTaskId);
     };
 
     return (

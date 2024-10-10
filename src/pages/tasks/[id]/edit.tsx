@@ -1,105 +1,93 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Task, TaskName } from '../../../types/types'
+import {  TaskName } from '../../../types/types'
 import taskSchema from '@/schema/taskSchema'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Form from '../../../components/Form'
 import Input from '../../../components/InputText'
 import { Title } from '@mantine/core';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+
+const customStyle = 'flex items-center justify-center min-h-screen'
 
 const edit = () => {
 
     const router = useRouter()
     const { id } = router.query
+    const [queryEnabled, setQueryEnabled] = useState(false);
 
     const {
         handleSubmit,
         formState: { errors },
         register,
         setValue,
-        watch,
     } = useForm<TaskName>({
         resolver: yupResolver(taskSchema),
     });
 
-    const watchValues = watch()
+    const { data, error, isError, isLoading } = useQuery({
+        queryKey: ['tasks', id],
+        queryFn: () => axios.get(`/tasks/${id}`),
+        enabled: queryEnabled,
+    });
 
-    const fetchSingleTask = async () => {
-        try {
-            const response = await fetch(`/tasks/${id}`);
-            if (response.ok) {
-                const data = await response.json();
-                console.log(data, "singleData")
-                setValue('taskName', data?.taskName)
-            } else {
-                console.log("Failed to fetch task data");
-            }
-        } catch (error) {
-            console.log(error);
+    useEffect(() => {
+        if (data) {
+            setValue('taskName', data?.data?.taskName)
         }
-    };
+    }, [data]);
 
     useEffect(() => {
         if (id) {
-            fetchSingleTask()
+            setQueryEnabled(true)
         }
     }, [id])
 
-    const handleUpdate = async (data: TaskName) => {
-        try {
-            const response = await fetch(`/tasks/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ taskName: data?.taskName }),
-            });
-
-            if (response.ok) {
-                const updatedTask: Task = await response.json();
-                router.push('/')
-
-            } else {
-
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    };
+    const mutation = useMutation({
+        mutationFn: (data: TaskName) => {
+            return axios.put(`/tasks/${id}`, { taskName: data.taskName });
+        },
+        onSuccess: () => {
+            router.push('/');
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        },
+    });
 
     const onSubmit: SubmitHandler<TaskName> = (data) => {
-        handleUpdate({ ...data })
+        mutation.mutate(data);
     };
+
+    if (isLoading) { return <div className={customStyle}>Loading...</div> }
+
+    if (isError) { return <div className={customStyle}>Error fetching: {error.message}</div>; }
 
     return (
 
-        <div className={`flex items-center justify-center min-h-screen`}>
-            {!watchValues?.taskName ?
-                <div className={`w-full max-w-md bg-white p-6 rounded-lg shadow-md`}>
-                    Oops no data found for this id: {id}
-                </div>
-                :
-                <div className={`w-full max-w-md bg-white p-6 rounded-lg shadow-md`}>
-                    <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
-                        Edit Task
-                    </Title>
-                    <Form
-                        buttonLabel="Update"
-                        handleSubmit={handleSubmit}
-                        onSubmit={onSubmit}
-                    >
-                        <Input
-                            name="taskName"
-                            label="Task Name"
-                            type="text"
-                            placeholder="Enter task name"
-                            error={errors.taskName?.message}
-                            className="w-full border border-gray-300 rounded-lg p-2"
-                            register={register}
-                        />
-                    </Form>
-                </div>}
+        <div className={customStyle}>
+            <div className={`w-full max-w-md bg-white p-6 rounded-lg shadow-md`}>
+                <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
+                    Edit Task
+                </Title>
+                <Form
+                    buttonLabel="Update"
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
+                >
+                    <Input
+                        name="taskName"
+                        label="Task Name"
+                        type="text"
+                        placeholder="Enter task name"
+                        error={errors.taskName?.message}
+                        className="w-full border border-gray-300 rounded-lg p-2"
+                        register={register}
+                    />
+                </Form>
+            </div>
         </div>
     )
 }

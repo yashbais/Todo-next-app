@@ -2,6 +2,9 @@ import '../styles/globals.css';
 import '@mantine/core/styles.css';
 import { createTheme, MantineProvider } from '@mantine/core';
 import type { AppProps } from "next/app";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import queryClient from '../utils/react-query-client';
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'true') {
   import('../mocks').then(({ setupMocks }) => {
@@ -29,8 +32,11 @@ const theme = createTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   return <>
-    <MantineProvider theme={theme}>
-      <Component {...pageProps} />
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={theme}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </MantineProvider>
+    </QueryClientProvider>
   </>
 }
