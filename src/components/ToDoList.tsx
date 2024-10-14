@@ -136,8 +136,11 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
     return (
         <>
             <div className="p-4">
-                <CustomTable data={tasks} columns={columns}
+                <CustomTable
+                    data={tasks}
+                    columns={columns}
                     totalPages={totalPages}
+                    fetchTasks={fetchTasks}
                     page={page}
                     setPage={setPage}
                     limit={limit}

@@ -48,6 +48,8 @@ const Tasks = () => {
         }
     }, [data]);
 
+
+
     const handleRefetch = async (): Promise<void> => {
         // refetch the entire data or
         // await refetch(); 
@@ -55,6 +57,12 @@ const Tasks = () => {
         // invalidate the previously cached data 
         queryClient.invalidateQueries({ queryKey: ['tasks'] })
     };
+
+    useEffect(() => {
+        if(page && limit){
+            handleRefetch();  // Trigger API call whenever page or limit changes
+        }
+    }, [page, limit]);
 
 
     return (

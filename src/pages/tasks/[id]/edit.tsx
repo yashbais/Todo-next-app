@@ -16,7 +16,6 @@ const edit = () => {
 
     const router = useRouter()
     const { id } = router.query
-    const [queryEnabled, setQueryEnabled] = useState(false);
 
     const {
         handleSubmit,
@@ -30,7 +29,7 @@ const edit = () => {
     const { data, error, isError, isLoading } = useQuery({
         queryKey: ['tasks', id],
         queryFn: () => axios.get(`/tasks/${id}`),
-        enabled: queryEnabled,
+        enabled: !!router.query.id,
     });
 
     useEffect(() => {
@@ -39,11 +38,7 @@ const edit = () => {
         }
     }, [data]);
 
-    useEffect(() => {
-        if (id) {
-            setQueryEnabled(true)
-        }
-    }, [id])
+  
 
     const mutation = useMutation({
         mutationFn: (data: TaskName) => {
