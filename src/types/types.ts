@@ -1,6 +1,7 @@
 import { ButtonProps } from '@mantine/core';
 import { ReactNode ,InputHTMLAttributes} from 'react';
 import { UseFormRegister } from "react-hook-form";
+import {  ColumnDef} from '@tanstack/react-table';
 
 export type childrenType = ReactNode;
 
@@ -42,7 +43,12 @@ export interface CustomInputProps {
 export interface TodoListProps {
   tasks: Task[];
   fetchTasks: () => Promise<void>; 
-}
+  totalPages:number;
+  page:number;
+  setPage: (page: number) => void;
+  limit:number;
+  setLimit: (limit: number) => void; 
+  }
 
 export interface TaskName {
   taskName: string; 
@@ -54,4 +60,9 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   register: UseFormRegister<any>;
+}
+
+export interface TableProps<TData> {
+  data: TData[];
+  columns: ColumnDef<TData, any>[];
 }

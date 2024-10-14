@@ -9,10 +9,11 @@ import React, { useState, useEffect } from 'react';
 import CustomModal from '../../components/CustomModal';
 import CustomButton from '../../components/CustomButton';
 
+const fallbackArray: [] = []
 
-const fetchAllTasks = () => {
-    return axios.get("/tasks")
-}
+const fetchAllTasks = async ({ page, limit }: { page: number; limit: number }) => {
+    return axios.get(`/tasks?page=${page}&limit=${limit}`);
+};
 
 const Tasks = () => {
 
@@ -21,24 +22,29 @@ const Tasks = () => {
     const [opened, setOpened] = useState(false);
     const [queryEnabled, setQueryEnabled] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [page, setPage] = useState<number>(1); 
+    const [limit, setLimit] = useState<number>(5); 
 
-    // Delay query by 1 second to initialize MSW
+    // Delay query by 2 second to initialize MSW
     useEffect(() => {
         const timer = setTimeout(() => {
             setQueryEnabled(true);
-        }, 1000);
+        }, 2000);
         return () => clearTimeout(timer);
     }, []);
 
-    const { data, error, isError, isLoading, isFetching, refetch } = useQuery({
+    const { data, isLoading, isFetching } = useQuery({
         queryKey: ['tasks'],
-        queryFn: fetchAllTasks,
-        enabled: queryEnabled, // The query will run only when queryEnabled is true
+        queryFn:  () => fetchAllTasks({ page, limit }),
+        enabled: queryEnabled, 
     });
+
 
     useEffect(() => {
         if (data) {
-            setTasks(data.data);
+            setTasks(data?.data?.tasks);
+            setTotalPages(data?.data?.totalPages);
         }
     }, [data]);
 
@@ -50,13 +56,9 @@ const Tasks = () => {
         queryClient.invalidateQueries({ queryKey: ['tasks'] })
     };
 
-    if (isError) {
-        return <div>Error fetching: {error.message}</div>;
-    }
-
 
     return (
-        <div className='bg-[#f0f2f5] flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
+        <div className=' flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96'>
             <Header />
 
             <div className="flex gap-5 flex-col-reverse sm:flex-row items-baseline justify-between w-full py-5">
@@ -101,8 +103,13 @@ const Tasks = () => {
             ) : (
                 <div className="flex flex-col w-full lg:px-0 py-5">
                     <TodoList
-                        tasks={tasks || []}
+                        tasks={tasks || fallbackArray}
                         fetchTasks={handleRefetch}
+                        totalPages={totalPages || 1}
+                        page={page}
+                        setPage={setPage}
+                        limit={limit}
+                        setLimit={setLimit}
                     />
                 </div>
             )}

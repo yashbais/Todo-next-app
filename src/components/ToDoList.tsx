@@ -1,136 +1,191 @@
-import React, { useState } from 'react';
-import { Text } from '@mantine/core';
+import React, { useState, useEffect } from 'react';
 import CustomButton from './CustomButton';
 import CommonModal from './CustomModal';
-import { TodoListProps } from '../types/types';
-import { useRouter } from 'next/router'
-import { useMutation } from '@tanstack/react-query';
+import CustomTable from './CustomTable';
+import { TodoListProps, Task, TaskName } from '../types/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
+import { yupResolver } from '@hookform/resolvers/yup';
+import Form from './Form';
+import Input from './InputText';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import taskSchema from '../schema/taskSchema';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { ActionIcon } from '@mantine/core';
 
-const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks }) => {
-    const router = useRouter()
-    
-    const [taskType, setTaskType] = useState("");
+
+const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page, setPage, limit, setLimit }) => {
+    const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
+    const [queryEnabled, setQueryEnabled] = useState(false);
+
+    const {
+        handleSubmit,
+        formState: { errors },
+        register,
+        setValue,
+    } = useForm<TaskName>({
+        resolver: yupResolver(taskSchema),
+    });
 
 
-    const handleEdit = (taskId: number) => {
-        router.push(`tasks/${taskId}/edit`)
-    };
+    const { data } = useQuery({
+        queryKey: ['tasks', openedTaskId],
+        queryFn: () => axios.get(`/tasks/${openedTaskId}`),
+        enabled: queryEnabled,
+    });
 
-    const handleDelete = async (taskId: number) => {
-        setTaskType("Delete")
-        setOpenedTaskId(taskId);
-    }
+    useEffect(() => {
+        if (data) {
+            setValue('taskName', data?.data?.taskName);
+            setQueryEnabled(false);
+        }
+    }, [data]);
 
-    const mutation = useMutation({
+
+    const deleteMutation = useMutation({
         mutationFn: (id: number) => {
             return axios.delete(`/tasks/${id}`);
         },
         onSuccess: () => {
-            fetchTasks()
+            fetchTasks();
             setOpenedTaskId(null);
-            setTaskType("")
+            setTaskType('');
         },
         onError: (error) => {
-            console.error('Error creating task:', error);
+            console.error('Error deleting task:', error);
         },
     });
 
-    const handleDeleteData = async () => {
-        if (!openedTaskId) {
-            return;
-        }
+    const editMutation = useMutation({
+        mutationFn: (taskData: TaskName) => {
+            return axios.put(`/tasks/${openedTaskId}`, { taskName: taskData.taskName });
+        },
+        onSuccess: () => {
+            fetchTasks();
+            setOpenedTaskId(null);
+            setTaskType('');
+        },
+        onError: (error) => {
+            console.error('Error editing task:', error);
+        },
+    });
 
-        mutation.mutate(openedTaskId);
+    const handleDeleteData = () => {
+        if (openedTaskId !== null) {
+            deleteMutation.mutate(openedTaskId);
+        }
     };
 
-    return (
-        <div className="h-96 overflow-y-auto scrollbar-none">
-            {!tasks.length ? (
-                <p className="text-gray-500 text-center">No tasks available. Add tasks to your to-do list.</p>
-            ) : (
-                <div className="space-y-4">
-                    {tasks.map((task, index) => (
-                        <div
-                            key={task.id}
-                            className="py-4 m-1 w-full bg-white shadow-md rounded-xl px-6 flex flex-col sm:flex-row items-start justify-between"
-                        >
-                            <div className="flex flex-col sm:flex-row sm:items-center w-full">
-                                <div className="p-2 flex-1">
-                                    <Text color="dimmed">Task {index + 1}</Text>
-                                    <Text size="md">{task?.taskName}</Text>
-                                </div>
-                            </div>
+    const handleEdit = (taskId: number) => {
+        setQueryEnabled(true);
+        setTaskType('Edit');
+        setOpenedTaskId(taskId);
+    };
 
-                            <div className="p-2 flex gap-2 mt-4 sm:mt-0">
-                                <CustomButton
-                                    variant="filled"
-                                    color="lime"
-                                    radius="md"
-                                    onClick={() =>
-                                        handleEdit(task.id)
-                                    }
-                                    svgIcon={
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            width="16"
-                                            height="16"
-                                            fill="currentColor"
-                                        >
-                                            <path d="M3 17.25V21h3.75l11.07-11.07-3.75-3.75L3 17.25zm15.66-11.88l1.42 1.42a2.001 2.001 0 0 0 0-2.83l-1.42-1.42a2.001 2.001 0 0 0-2.83 0l-1.42 1.42 3.75 3.75z" />
-                                        </svg>
-                                    }
-                                >
-                                    Edit
-                                </CustomButton>
+    const handleDelete = (taskId: number) => {
+        setTaskType('Delete');
+        setOpenedTaskId(taskId);
+    };
 
-                                <CustomButton
-                                    variant="filled"
-                                    color="red"
-                                    radius="md"
-                                    onClick={() => handleDelete(task.id)}
-                                    svgIcon={
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            width="16"
-                                            height="16"
-                                            fill="currentColor"
-                                        >
-                                            <path d="M3 6l3 18h12l3-18H3zm3-3h12a1 1 0 0 1 1 1v1H5V4a1 1 0 0 1 1-1z" />
-                                        </svg>
-                                    }
-                                >
-                                    Delete
-                                </CustomButton>
-                            </div>
+    const onSubmit: SubmitHandler<TaskName> = (taskData) => {
+        editMutation.mutate(taskData);
+    };
 
-                            {/* Modal for deleting task */}
-                            <CommonModal
-                                setOpened={(open) => setOpenedTaskId(open ? task.id : null)}
-                                opened={openedTaskId === task.id}
-                                title={`${taskType} Task`}
-                                trigger={<></>}
-                            >
-                                <div className="mt-4 flex justify-center item-center flex-col  ">
-                                    <p className="pb-4 text-center">Are you sure you want to delete the task?</p>
-                                    <CustomButton
-                                        variant="filled"
-                                        color="red"
-                                        radius="md"
-                                        onClick={handleDeleteData}
-                                    >
-                                        Delete
-                                    </CustomButton>
-                                </div>
-                            </CommonModal>
-                        </div>
-                    ))}
+    const columns: ColumnDef<Task>[] = [
+        {
+            accessorKey: 'id',
+            header: 'ID',
+        },
+        {
+            accessorKey: 'taskName',
+            header: 'Tasks',
+        },
+        {
+            id: 'actions',
+            header: 'Actions',
+            cell: ({ row }) => (
+                <div className="p-2 flex gap-7 mt-4 sm:mt-0 " >
+
+
+                    <ActionIcon
+                        onClick={() =>
+                            handleEdit(row.original.id)
+
+                        }
+                        aria-label="default action icon" size="lg"
+                    >
+                        <IconPencil size={20} />
+                    </ActionIcon>
+
+                    <ActionIcon
+                        onClick={() => handleDelete(row.original.id)}
+
+                        aria-label="default action icon" size="lg"
+                    >
+                        <IconTrash stroke={2} />
+                    </ActionIcon>
+
+
                 </div>
-            )}
-        </div>
+            ),
+        },
+    ];
+
+    return (
+        <>
+            <div className="p-4">
+                <CustomTable data={tasks} columns={columns}
+                    totalPages={totalPages}
+                    page={page}
+                    setPage={setPage}
+                    limit={limit}
+                    setLimit={setLimit} />
+            </div>
+
+            {/* Modal for task actions */}
+            <CommonModal
+                setOpened={(open) => setOpenedTaskId(open ? openedTaskId : null)}
+                opened={openedTaskId !== null}
+                title={`${taskType} Task`}
+                trigger={<></>}
+            >
+                {taskType === 'Delete' ? (
+                    <div className="mt-4 flex justify-center items-center flex-col">
+                        <p className="pb-4 text-center">
+                            Are you sure you want to delete the task with ID {openedTaskId}?
+                        </p>
+                        <CustomButton
+                            variant="filled"
+                            color="red"
+                            radius="md"
+                            onClick={handleDeleteData}
+                        >
+                            Delete
+                        </CustomButton>
+                    </div>
+                ) : (
+                    <div className="w-full max-w-md">
+                        <Form
+                            buttonLabel="Update"
+                            handleSubmit={handleSubmit}
+                            onSubmit={onSubmit}
+                        >
+                            <Input
+                                name="taskName"
+                                label="Task Name"
+                                type="text"
+                                placeholder="Enter task name"
+                                error={errors.taskName?.message}
+                                className="w-full border border-gray-300 rounded-lg p-2"
+                                register={register}
+                            />
+                        </Form>
+                    </div>
+                )}
+            </CommonModal>
+        </>
     );
 };
 
