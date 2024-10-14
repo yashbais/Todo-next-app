@@ -15,21 +15,18 @@ export const handlers = [
 
     // Get all tasks
     http.get('/tasks', ({ request }) => {
-
-        const page = Number(request.url?.searchParams?.get('page')) || 1; 
-        const limit = Number(request.url?.searchParams?.get('limit')) || 5; 
-
+        const url = new URL(request.url);
+        const page = Number(url.searchParams.get('page')) || 1;
+        const limit = Number(url.searchParams.get('limit')) || 5;
         const totalItems = todoList.length;
         const startIndex = (page - 1) * limit;
         const endIndex = startIndex + limit;
-
         const paginatedTasks = todoList.slice(startIndex, endIndex);
-
         return HttpResponse.json({
-            tasks: paginatedTasks,  
-            totalItems,             
-            totalPages: Math.ceil(totalItems / limit), 
-            currentPage: page 
+            tasks: paginatedTasks,
+            totalItems,
+            totalPages: Math.ceil(totalItems / limit),
+            currentPage: page
         }, { status: 200 });
     }),
 
