@@ -69,6 +69,7 @@ const ReusableTable = <TData extends object>({
             </Table>
 
             {/* Pagination controls */}
+            {data.length > 0 &&
             <div className="flex justify-end items-baseline space-x-2 mt-2 flex-wrap gap-2">
                 <Text className="mb-2 md:mb-0">Rows per page</Text>
 
@@ -96,7 +97,7 @@ const ReusableTable = <TData extends object>({
                     siblings={1}
                     boundaries={1}
                 />
-            </div>
+            </div>}
         </>
     );
 };
