@@ -4,13 +4,13 @@ import Input from "../../components/InputText";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import taskSchema from '../../schema/taskSchema';
-import { TaskName } from '../../types/types';
+import { TaskName,NewComponentProps } from '../../types/types';
 import { useRouter } from 'next/router';
 import { Title } from '@mantine/core';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
-const New = ({ fetchTasks, setOpened }: any) => {
+const New = ({ fetchTasks, setOpened }: NewComponentProps) => {
     const router = useRouter();
     
     const {

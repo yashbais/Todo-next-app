@@ -84,3 +84,8 @@ export interface CustomTableProps {
     sorting: SortingState;
     setSorting: (sorting: SortingState) => void;
 }
+
+export interface NewComponentProps   {
+  fetchTasks: () => void;
+  setOpened: (value: React.SetStateAction<boolean>) => void; 
+}

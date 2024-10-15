@@ -59,8 +59,7 @@ const CustomTable = <TData extends object>({
                                                 onClick: () => {
                                                     if (header.column.getCanSort()) {
                                                         const currentSort = header.column.getIsSorted();
-                                                        const sortOrder =
-                                                            currentSort === 'asc' ? 'desc' : currentSort === 'desc' ? undefined : 'asc';
+                                                        const sortOrder = currentSort === 'asc' ? 'desc' : currentSort === 'desc' ? undefined : 'asc';
 
                                                         if (sortOrder) {
                                                             setSorting([{ id: header.column.id, desc: sortOrder === 'desc' }]);
