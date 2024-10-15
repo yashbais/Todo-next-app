@@ -45,6 +45,9 @@ const Tasks = () => {
         if (data) {
             setTasks(data?.data?.tasks);
             setTotalPages(data?.data?.totalPages);
+            if(data?.data?.totalPages < data?.data?.currentPage){
+                setPage(data?.data?.currentPage-1)
+            }
         }
     }, [data]);
 
