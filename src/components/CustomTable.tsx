@@ -13,13 +13,11 @@ const ReusableTable = <TData extends object>({
     totalPages,
     page,
     setPage,
-    fetchTasks,
     limit,
     setLimit,
 }: TableProps<TData> & {
     totalPages: number;
     page: number;
-    fetchTasks: () => Promise<void>; 
     setPage: (page: number) => void;
     limit: number;
     setLimit: (limit: number) => void;

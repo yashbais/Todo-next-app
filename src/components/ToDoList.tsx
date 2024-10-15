@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomButton from './CustomButton';
-import CommonModal from './CustomModal';
+import CustomModal from './CustomModal';
 import CustomTable from './CustomTable';
 import { TodoListProps, Task, TaskName } from '../types/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -140,7 +140,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
                     data={tasks}
                     columns={columns}
                     totalPages={totalPages}
-                    fetchTasks={fetchTasks}
                     page={page}
                     setPage={setPage}
                     limit={limit}
@@ -148,11 +147,10 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
             </div>
 
             {/* Modal for task actions */}
-            <CommonModal
+            <CustomModal
                 setOpened={(open) => setOpenedTaskId(open ? openedTaskId : null)}
                 opened={openedTaskId !== null}
                 title={`${taskType} Task`}
-                trigger={<></>}
             >
                 {taskType === 'Delete' ? (
                     <div className="mt-4 flex justify-center items-center flex-col">
@@ -187,7 +185,8 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
                         </Form>
                     </div>
                 )}
-            </CommonModal>
+            </CustomModal>
+
         </>
     );
 };

@@ -26,7 +26,7 @@ export interface Task {
 export interface CommonModalProps {
   title: string;
   children: ReactNode;
-  trigger: ReactNode; 
+  trigger?: ReactNode; 
   opened : boolean;
   setOpened: (value: React.SetStateAction<boolean>) => void; 
 }
@@ -42,7 +42,7 @@ export interface CustomInputProps {
 
 export interface TodoListProps {
   tasks: Task[];
-  fetchTasks: () => Promise<void>; 
+  fetchTasks: () => void; 
   totalPages:number;
   page:number;
   setPage: (page: number) => void;
