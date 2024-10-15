@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import CustomButton from './CustomButton';
 import CustomModal from './CustomModal';
 import CustomTable from './CustomTable';
@@ -17,7 +17,7 @@ import { ActionIcon } from '@mantine/core';
 const TodoList: React.FC<TodoListProps> = ({ tasks,
     fetchTasks, totalPages, page, setPage, limit,
     setLimit, sorting, setSorting }) => {
-        
+
     const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
     const [queryEnabled, setQueryEnabled] = useState(false);
@@ -95,7 +95,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
         editMutation.mutate(taskData);
     };
 
-    const columns: ColumnDef<Task>[] = [
+    const columns: ColumnDef<Task>[] = useMemo(() => [
         {
             accessorKey: 'id',
             header: 'ID',
@@ -121,7 +121,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
             ),
             enableSorting: false,
         },
-    ];
+    ], []);
 
 
     return (

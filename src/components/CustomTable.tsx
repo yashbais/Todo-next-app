@@ -1,9 +1,9 @@
 import React from 'react';
-import {useReactTable,flexRender,getCoreRowModel} from '@tanstack/react-table';
+import { useReactTable, flexRender, getCoreRowModel } from '@tanstack/react-table';
 import { Table, Text, Center, Pagination, Select } from '@mantine/core';
 import { TableProps } from '../types/types';
-import { IconArrowsSort } from '@tabler/icons-react';
-import {CustomTableProps} from '../types/types'
+import { IconSortAscendingLetters, IconSortDescendingLetters, IconArrowsSort } from '@tabler/icons-react';
+import { CustomTableProps } from '../types/types'
 
 const CustomTable = <TData extends object>({
     data,
@@ -74,14 +74,40 @@ const CustomTable = <TData extends object>({
                                             {flexRender(header.column.columnDef.header, header.getContext())}
 
                                             {/* Only show sort icon for sortable columns */}
+
                                             {header.column.getCanSort() && (
-                                                <IconArrowsSort
-                                                    stroke={2}
-                                                    style={{
-                                                        opacity: header.column.getIsSorted() ? 1 : 0.5,
-                                                    }}
-                                                />
+                                                <>
+                                                    {header.column.getIsSorted() === 'asc' && (
+                                                        <IconSortAscendingLetters
+                                                            stroke={2}
+                                                            style={{
+                                                                opacity: 1, // Fully visible when sorted ascending
+                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {header.column.getIsSorted() === 'desc' && (
+                                                        <IconSortDescendingLetters
+                                                            stroke={2}
+                                                            style={{
+                                                                opacity: 1, // Fully visible when sorted descending
+                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                            }}
+                                                        />
+
+                                                    )}
+                                                    {header.column.getIsSorted() === false && (
+                                                        <IconArrowsSort
+                                                            stroke={2}
+                                                            style={{
+                                                                opacity: header.column.getIsSorted() ? 1 : 0.5,
+                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                            }}
+                                                        />
+                                                    )}
+                                                </>
                                             )}
+
                                         </div>
                                     )}
                                 </Table.Th>
