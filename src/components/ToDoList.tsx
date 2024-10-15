@@ -14,10 +14,10 @@ import taskSchema from '../schema/taskSchema';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { ActionIcon } from '@mantine/core';
 
-
 const TodoList: React.FC<TodoListProps> = ({ tasks,
     fetchTasks, totalPages, page, setPage, limit,
     setLimit, sorting, setSorting }) => {
+        
     const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
     const [queryEnabled, setQueryEnabled] = useState(false);

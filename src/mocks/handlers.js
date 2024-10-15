@@ -22,10 +22,8 @@ export const handlers = [
         const sortOrder = url.searchParams.get('sortOrder') || 'asc'; // default to ascending
         const totalItems = todoList.length;
     
-        // Paginate the tasks
         let paginatedTasks = todoList.slice((page - 1) * limit, page * limit);
     
-        // Sort by 'taskName' if requested
         if (sortBy === 'taskName') {
             paginatedTasks = paginatedTasks.sort((a, b) => {
                 const result = a.taskName.localeCompare(b.taskName);

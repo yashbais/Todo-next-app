@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
-import {
-    useReactTable,
-    flexRender,
-    getCoreRowModel,
-    SortingState
-} from '@tanstack/react-table';
+import React from 'react';
+import {useReactTable,flexRender,getCoreRowModel} from '@tanstack/react-table';
 import { Table, Text, Center, Pagination, Select } from '@mantine/core';
 import { TableProps } from '../types/types';
 import { IconArrowsSort } from '@tabler/icons-react';
+import {CustomTableProps} from '../types/types'
 
-const ReusableTable = <TData extends object>({
+const CustomTable = <TData extends object>({
     data,
     columns,
     totalPages,
@@ -19,15 +15,7 @@ const ReusableTable = <TData extends object>({
     setLimit,
     sorting,
     setSorting,
-}: TableProps<TData> & {
-    totalPages: number;
-    page: number;
-    setPage: (page: number) => void;
-    limit: number;
-    setLimit: (limit: number) => void;
-    sorting: SortingState;
-    setSorting: (sorting: SortingState) => void;
-}) => {
+}: TableProps<TData> & CustomTableProps) => {
     const table = useReactTable<TData>({
         data,
         columns,
@@ -69,7 +57,7 @@ const ReusableTable = <TData extends object>({
                                                     ? 'select-none cursor-pointer flex items-center gap-1'
                                                     : '',
                                                 onClick: () => {
-                                                    if (header.column.getCanSort()) {  
+                                                    if (header.column.getCanSort()) {
                                                         const currentSort = header.column.getIsSorted();
                                                         const sortOrder =
                                                             currentSort === 'asc' ? 'desc' : currentSort === 'desc' ? undefined : 'asc';
@@ -77,7 +65,7 @@ const ReusableTable = <TData extends object>({
                                                         if (sortOrder) {
                                                             setSorting([{ id: header.column.id, desc: sortOrder === 'desc' }]);
                                                         } else {
-                                                            setSorting([]); 
+                                                            setSorting([]);
                                                         }
                                                     }
                                                 },
@@ -91,12 +79,7 @@ const ReusableTable = <TData extends object>({
                                                 <IconArrowsSort
                                                     stroke={2}
                                                     style={{
-                                                        transition: 'transform 0.3s ease',
-                                                        transform:
-                                                            header.column.getIsSorted() === 'asc'
-                                                                ? 'rotate(180deg)'
-                                                                : 'none',
-                                                        opacity: header.column.getIsSorted() ? 1 : 0.5, 
+                                                        opacity: header.column.getIsSorted() ? 1 : 0.5,
                                                     }}
                                                 />
                                             )}
@@ -166,4 +149,4 @@ const ReusableTable = <TData extends object>({
     );
 };
 
-export default ReusableTable;
+export default CustomTable;

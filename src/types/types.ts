@@ -13,7 +13,7 @@ export interface IFormProps<T> {
     handleSubmit: any
 }
 export interface CustomButtonProps extends ButtonProps {
-  svgIcon?: ReactNode; // Optional prop for an SVG icon
+  svgIcon?: ReactNode; 
   children: ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
@@ -67,4 +67,20 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export interface TableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData, any>[];
+}
+
+export interface AllTasks {
+  page: number;
+  limit: number;
+  sorting?: SortingState;
+}
+
+export interface CustomTableProps {
+  totalPages: number;
+    page: number;
+    setPage: (page: number) => void;
+    limit: number;
+    setLimit: (limit: number) => void;
+    sorting: SortingState;
+    setSorting: (sorting: SortingState) => void;
 }
