@@ -18,10 +18,21 @@ export const handlers = [
         const url = new URL(request.url);
         const page = Number(url.searchParams.get('page')) || 1;
         const limit = Number(url.searchParams.get('limit')) || 5;
+        const sortBy = url.searchParams.get('sortBy') || '';
+        const sortOrder = url.searchParams.get('sortOrder') || 'asc'; // default to ascending
         const totalItems = todoList.length;
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
-        const paginatedTasks = todoList.slice(startIndex, endIndex);
+    
+        // Paginate the tasks
+        let paginatedTasks = todoList.slice((page - 1) * limit, page * limit);
+    
+        // Sort by 'taskName' if requested
+        if (sortBy === 'taskName') {
+            paginatedTasks = paginatedTasks.sort((a, b) => {
+                const result = a.taskName.localeCompare(b.taskName);
+                return sortOrder === 'asc' ? result : -result;
+            });
+        }
+    
         return HttpResponse.json({
             tasks: paginatedTasks,
             totalItems,
@@ -29,6 +40,7 @@ export const handlers = [
             currentPage: page
         }, { status: 200 });
     }),
+    
 
 
     // Get a specific task by ID

@@ -15,7 +15,9 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { ActionIcon } from '@mantine/core';
 
 
-const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page, setPage, limit, setLimit }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks,
+    fetchTasks, totalPages, page, setPage, limit,
+    setLimit, sorting, setSorting }) => {
     const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
     const [queryEnabled, setQueryEnabled] = useState(false);
@@ -97,41 +99,30 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
         {
             accessorKey: 'id',
             header: 'ID',
+            enableSorting: false,
         },
         {
             accessorKey: 'taskName',
             header: 'Tasks',
+            enableSorting: true,
         },
         {
             id: 'actions',
             header: 'Actions',
             cell: ({ row }) => (
-                <div className="p-2 flex gap-7 mt-4 sm:mt-0 " >
-
-
-                    <ActionIcon
-                        onClick={() =>
-                            handleEdit(row.original.id)
-
-                        }
-                        aria-label="default action icon" size="lg"
-                    >
+                <div className="p-2 flex gap-7 mt-4 sm:mt-0 ">
+                    <ActionIcon onClick={() => handleEdit(row.original.id)} aria-label="edit" size="lg">
                         <IconPencil size={20} />
                     </ActionIcon>
-
-                    <ActionIcon
-                        onClick={() => handleDelete(row.original.id)}
-
-                        aria-label="default action icon" size="lg"
-                    >
+                    <ActionIcon onClick={() => handleDelete(row.original.id)} aria-label="delete" size="lg">
                         <IconTrash stroke={2} />
                     </ActionIcon>
-
-
                 </div>
             ),
+            enableSorting: false,
         },
     ];
+
 
     return (
         <>
@@ -143,7 +134,10 @@ const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks, totalPages, page
                     page={page}
                     setPage={setPage}
                     limit={limit}
-                    setLimit={setLimit} />
+                    setLimit={setLimit}
+                    sorting={sorting}
+                    setSorting={setSorting}
+                />
             </div>
 
             {/* Modal for task actions */}

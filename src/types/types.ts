@@ -1,7 +1,7 @@
 import { ButtonProps } from '@mantine/core';
 import { ReactNode ,InputHTMLAttributes} from 'react';
 import { UseFormRegister } from "react-hook-form";
-import {  ColumnDef} from '@tanstack/react-table';
+import {  ColumnDef,SortingState} from '@tanstack/react-table';
 
 export type childrenType = ReactNode;
 
@@ -48,6 +48,8 @@ export interface TodoListProps {
   setPage: (page: number) => void;
   limit:number;
   setLimit: (limit: number) => void; 
+  sorting: SortingState;
+  setSorting: (sorting: SortingState) => void;
   }
 
 export interface TaskName {
