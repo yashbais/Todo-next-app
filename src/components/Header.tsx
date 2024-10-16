@@ -22,7 +22,7 @@ const Header = () => {
     <>
       <header className="bg-gradient-to-r from-purple-300 to-purple-500 py-4 flex md:justify-evenly justify-between items-center px-4">
         <Title order={1} className="text-white">
-          Todo App
+          Tasks app
         </Title>
         {user ? (
           <div className="flex items-center">
