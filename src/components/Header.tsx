@@ -42,7 +42,7 @@ const Header = () => {
               variant="outline"
               color="white"
               radius="md"
-              onClick={handleRegisterClick} // Open modal on click
+              onClick={handleRegisterClick} 
             >
               Register
             </CustomButton>

@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { User, UserSlice } from "../types/types";
 
 const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
@@ -13,4 +14,7 @@ const createUserSlice: StateCreator<UserSlice> = (set, get) => ({
   },
 });
 
-export const userSlice = createUserSlice;
+export const userSlice  = persist(createUserSlice, {
+    name: 'user-storage', 
+    storage: createJSONStorage(() => sessionStorage), 
+  });
