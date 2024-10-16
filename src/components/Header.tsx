@@ -20,13 +20,13 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-gradient-to-r from-purple-300 to-purple-500 py-4 flex justify-evenly items-center px-4">
+      <header className="bg-gradient-to-r from-purple-300 to-purple-500 py-4 flex md:justify-evenly justify-between items-center px-4">
         <Title order={1} className="text-white">
           Todo App
         </Title>
         {user ? (
           <div className="flex items-center">
-            <span className="text-white mr-4">Welcome, {user.name}!</span>
+            <span className="text-white mr-4 md:block hidden">Welcome, {user.name}!</span>
             <CustomButton
               variant="outline"
               color="white"
