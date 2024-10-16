@@ -50,6 +50,7 @@ const Tasks = () => {
         queryFn: () => fetchAllTasks({ page, limit, sorting }),
         enabled: queryEnabled,
         refetchOnWindowFocus: false,
+      
     });
 
     useEffect(() => {
