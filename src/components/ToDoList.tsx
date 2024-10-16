@@ -126,7 +126,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
 
     return (
         <>
-            <div className="p-4">
+            <div className="p-4 ">
                 <CustomTable
                     data={tasks}
                     columns={columns}

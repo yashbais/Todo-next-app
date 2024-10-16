@@ -21,16 +21,18 @@ export const handlers = [
         const sortBy = url.searchParams.get('sortBy') || '';
         const sortOrder = url.searchParams.get('sortOrder') || 'asc'; // default to ascending
         const totalItems = todoList.length;
-    
-        let paginatedTasks = todoList.slice((page - 1) * limit, page * limit);
-    
+
+        let sortedTasks = [...todoList];
+
         if (sortBy === 'taskName') {
-            paginatedTasks = paginatedTasks.sort((a, b) => {
+            sortedTasks.sort((a, b) => {
                 const result = a.taskName.localeCompare(b.taskName);
                 return sortOrder === 'asc' ? result : -result;
             });
         }
     
+        let paginatedTasks = sortedTasks.slice((page - 1) * limit, page * limit);
+
         return HttpResponse.json({
             tasks: paginatedTasks,
             totalItems,

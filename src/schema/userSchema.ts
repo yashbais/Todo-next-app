@@ -9,6 +9,7 @@ const userSchema = Yup.object().shape({
     .test('no-spaces-only', 'Name cannot be just spaces', (value) => value.trim() !== ''),
   
   email: Yup.string()
+  .trim()
     .required('Email is required')
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|info|co|io|xyz)$/,

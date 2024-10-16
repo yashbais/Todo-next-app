@@ -33,7 +33,6 @@ const Tasks = () => {
 
     const [opened, setOpened] = useState(false);
     const [queryEnabled, setQueryEnabled] = useState(false);
-    const [tasks, setTasks] = useState<Task[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(5);
@@ -52,12 +51,10 @@ const Tasks = () => {
         queryFn: () => fetchAllTasks({ page, limit, sorting }),
         enabled: queryEnabled,
         refetchOnWindowFocus: false,
-      
     });
 
     useEffect(() => {
         if (data) {
-            setTasks(data?.data?.tasks || []);
             setTotalPages(data?.data?.totalPages || 1);
             if (data?.data?.totalPages < data?.data?.currentPage) {
                 setPage(data?.data?.currentPage - 1);
@@ -113,7 +110,7 @@ const Tasks = () => {
             ) : (
                 <div className="flex flex-col w-full lg:px-0 py-5">
                     <TodoList
-                        tasks={tasks || fallbackArray}
+                        tasks={data?.data?.tasks || fallbackArray}
                         fetchTasks={handleRefetch}
                         totalPages={totalPages || 1}
                         page={page}
