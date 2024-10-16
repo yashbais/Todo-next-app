@@ -2,7 +2,6 @@ import New from './New';
 import axios from 'axios';
 import { Title } from '@mantine/core';
 import { Task, AllTasks } from '../../types/types';
-import Header from '../../components/Header';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TodoList from '../../components/ToDoList';
 import React, { useState, useEffect } from 'react';
@@ -28,7 +27,6 @@ const fetchAllTasks = async ({ page, limit, sorting }: AllTasks) => {
 
 const Tasks = () => {
     const queryClient = useQueryClient();
-
     const [opened, setOpened] = useState(false);
     const [queryEnabled, setQueryEnabled] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -75,8 +73,6 @@ const Tasks = () => {
 
     return (
         <div className="flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96">
-            <Header />
-
             <div className="flex gap-5 flex-col-reverse sm:flex-row items-baseline justify-between w-full py-5">
                 <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                     Task List

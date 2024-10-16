@@ -89,3 +89,15 @@ export interface NewComponentProps   {
   fetchTasks: () => void;
   setOpened: (value: React.SetStateAction<boolean>) => void; 
 }
+
+export interface User {
+  name: string; 
+  email: string; 
+}
+
+export interface UserSlice {
+  user: User | null;
+  setUser: (user: User) => void;
+  clearUser: () => void;
+  updateUser: (user: Partial<User>) => void;
+}

@@ -1,23 +1,63 @@
-import React from 'react';
-import { Box, Title, Container } from '@mantine/core';
+import React, { useState } from 'react';
+import { Title } from '@mantine/core';
+import useStore from '../stores/useStore'; 
+import CustomModal from './CustomModal';
+import CustomButton from './CustomButton';
+import UserRegistration from './UserRegistration';
 
 const Header = () => {
+  const { user, clearUser } = useStore();
+  const [opened, setOpened] = useState(false);
+
+  const handleLogout = () => {
+    clearUser(); 
+    setOpened(false);
+  };
+
+  const handleRegisterClick = () => {
+    setOpened(true); 
+  };
 
   return (
     <>
-      <header className="py-3 md:w-[46rem] bg-gradient-to-r from-purple-300 to-purple-500 rounded-lg my-4">
-        <Container>
-          <Box maw={600} mx="auto" className="text-center">
-            <Title order={1} className="text-xl md:text-3xl font-bold" lineClamp={2}>
-              Todo App
-            </Title>
-            <p className="mt-2 text-lg md:text-xl">
-              Manage your tasks efficiently and effectively
-            </p>
-          </Box>
-        </Container>
+      <header className="bg-gradient-to-r from-purple-300 to-purple-500 py-4 flex justify-evenly items-center px-4">
+        <Title order={1} className="text-white">
+          Todo App
+        </Title>
+        {user ? (
+          <div className="flex items-center">
+            <span className="text-white mr-4">Welcome, {user.name}!</span>
+            <CustomButton
+              variant="outline"
+              color="white"
+              radius="md"
+              onClick={handleLogout}
+            >
+              Logout
+            </CustomButton>
+          </div>
+        ) : (
+          <>
+            <CustomButton
+              variant="outline"
+              color="white"
+              radius="md"
+              onClick={handleRegisterClick} // Open modal on click
+            >
+              Register
+            </CustomButton>
+            <CustomModal
+              setOpened={setOpened}
+              opened={opened}
+              title="Register to todo app!"
+            >
+              <div className="flex justify-center item-center flex-col">
+                <UserRegistration />
+              </div>
+            </CustomModal>
+          </>
+        )}
       </header>
-
     </>
   );
 };

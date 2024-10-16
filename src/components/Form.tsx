@@ -12,7 +12,7 @@ const Form = <T,>({
             <div className="form-fields">
                 {children}
             </div>
-            <Button type="submit" className="btn-submit mt-2">
+            <Button type="submit" className="btn-submit mt-2 ">
                 {buttonLabel}
             </Button>
         </form>

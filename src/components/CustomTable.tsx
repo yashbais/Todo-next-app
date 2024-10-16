@@ -81,8 +81,8 @@ const CustomTable = <TData extends object>({
                                                         <IconSortAscendingLetters
                                                             stroke={2}
                                                             style={{
-                                                                opacity: 1, // Fully visible when sorted ascending
-                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                                opacity: 1, 
+                                                                transition: 'transform 0.2s ease', 
                                                             }}
                                                         />
                                                     )}
@@ -90,8 +90,8 @@ const CustomTable = <TData extends object>({
                                                         <IconSortDescendingLetters
                                                             stroke={2}
                                                             style={{
-                                                                opacity: 1, // Fully visible when sorted descending
-                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                                opacity: 1, 
+                                                                transition: 'transform 0.2s ease', 
                                                             }}
                                                         />
 
@@ -101,7 +101,7 @@ const CustomTable = <TData extends object>({
                                                             stroke={2}
                                                             style={{
                                                                 opacity: header.column.getIsSorted() ? 1 : 0.5,
-                                                                transition: 'transform 0.2s ease', // Optional: smooth rotation transition
+                                                                transition: 'transform 0.2s ease', 
                                                             }}
                                                         />
                                                     )}
