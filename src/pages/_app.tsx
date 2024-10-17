@@ -13,6 +13,7 @@ if (process.env.NEXT_PUBLIC_API_MOCKING === 'true') {
 }
 
 const theme = createTheme({
+  fontFamily: 'serif',
   colors: {
     customPurple: [
       '#f3e8ff',
