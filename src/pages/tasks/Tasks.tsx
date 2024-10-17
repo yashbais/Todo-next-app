@@ -1,19 +1,18 @@
 import New from './New';
 import axios from 'axios';
-import { Title } from '@mantine/core';
 import { Task, AllTasks } from '../../types/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TodoList from '../../components/ToDoList';
 import React, { useState, useEffect } from 'react';
 import CustomModal from '../../components/CustomModal';
 import { SortingState } from '@tanstack/react-table';
-import useStore from '../../stores/useStore'
-import {handleCapitalFirstLetter} from '../../utils/HandleCapitalFirstLetter'
+import useStore from '../../stores/useStore';
+import { handleCapitalFirstLetter } from '../../utils/HandleCapitalFirstLetter';
+import { useRouter } from 'next/router';
 
 const fallbackArray: Task[] = [];
 
 const fetchAllTasks = async ({ page, limit, sorting }: AllTasks) => {
-
     const sortBy = sorting?.length ? sorting[0].id : undefined;
     const sortOrder = sorting?.length ? (sorting[0].desc ? 'desc' : 'asc') : undefined;
 
@@ -30,6 +29,7 @@ const fetchAllTasks = async ({ page, limit, sorting }: AllTasks) => {
 const Tasks = () => {
     const queryClient = useQueryClient();
     const { user } = useStore();
+    const router = useRouter();
 
     const [opened, setOpened] = useState(false);
     const [queryEnabled, setQueryEnabled] = useState(false);
@@ -37,6 +37,16 @@ const Tasks = () => {
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(5);
     const [sorting, setSorting] = useState<SortingState>([]);
+
+    // Set state from URL query params on component mount
+    useEffect(() => {
+        const { page: queryPage, limit: queryLimit, sortBy, sortOrder } = router.query;
+        if (queryPage) setPage(Number(queryPage));
+        if (queryLimit) setLimit(Number(queryLimit));
+        if (sortBy && sortOrder) {
+            setSorting([{ id: sortBy as string, desc: sortOrder === 'desc' }]);
+        }
+    }, [router.query]);
 
     // Delay query by 2 seconds to initialize MSW
     useEffect(() => {
@@ -62,22 +72,32 @@ const Tasks = () => {
         }
     }, [data]);
 
+    // Update URL query params when page, limit, or sorting changes
+    useEffect(() => {
+        if (page && limit) {
+            const queryParams = {
+                page: page.toString(),
+                limit: limit.toString(),
+                ...(sorting.length && {
+                    sortBy: sorting[0].id,
+                    sortOrder: sorting[0].desc ? 'desc' : 'asc',
+                }),
+            };
+            router.push({
+                pathname: router.pathname,
+                query: queryParams,
+            }, undefined, { shallow: true }); // Use shallow routing to avoid full page reload
+        }
+    }, [page, limit, sorting]);
+
     const handleRefetch = () => {
         queryClient.invalidateQueries({ queryKey: ['tasks'] });
     };
 
-    useEffect(() => {
-        if (page && limit) {
-            handleRefetch();
-        }
-    }, [page, limit]);
-
     return (
         <div className="flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96">
             <div className="flex gap-5 flex-col-reverse sm:flex-row items-baseline justify-evenly w-full py-5">
-                <>
-                Hey {user?.name ? handleCapitalFirstLetter(user?.name) : "User"}, check out your tasks!
-                </>
+                <>Hey {user?.name ? handleCapitalFirstLetter(user?.name) : 'User'}, check out your tasks!</>
 
                 <CustomModal
                     setOpened={setOpened}
