@@ -45,7 +45,7 @@ const CustomTable = <TData extends object>({
         <>
             <Table striped highlightOnHover withTableBorder withColumnBorders>
                 {/* Table Head */}
-                <Table.Thead>
+                <Table.Thead >
                     {table.getHeaderGroups().map((headerGroup) => (
                         <Table.Tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (

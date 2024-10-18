@@ -5,7 +5,7 @@ import taskSchema from '@/schema/taskSchema'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Form from '../../../components/Form'
-import Input from '../../../components/InputText'
+import CustomInput from '../../../components/CustomInput'
 import { Title } from '@mantine/core';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -72,7 +72,7 @@ const edit = () => {
                     handleSubmit={handleSubmit}
                     onSubmit={onSubmit}
                 >
-                    <Input
+                    <CustomInput
                         name="taskName"
                         label="Task Name"
                         type="text"

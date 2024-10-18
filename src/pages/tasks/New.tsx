@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "../../components/Form";
-import Input from "../../components/InputText";
+import CustomInput from "../../components/CustomInput";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import taskSchema from '../../schema/taskSchema';
@@ -57,7 +57,7 @@ const New = ({ fetchTasks, setOpened }: NewComponentProps) => {
                     handleSubmit={handleSubmit}
                     onSubmit={onSubmit}
                 >
-                    <Input
+                    <CustomInput
                         name="taskName"
                         label="Task Name"
                         type="text"

@@ -23,6 +23,9 @@ importers:
       '@storybook/addon-styling-webpack':
         specifier: ^1.0.0
         version: 1.0.0(storybook@8.3.5)(webpack@5.95.0(esbuild@0.23.1))
+      '@storybook/preview-api':
+        specifier: ^8.3.5
+        version: 8.3.5(storybook@8.3.5)
       '@tabler/icons-react':
         specifier: ^3.19.0
         version: 3.19.0(react@18.3.1)

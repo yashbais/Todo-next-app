@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { User } from '../types/types';
 import userSchema from '../schema/userSchema';
 import Form from './Form'
-import Input from './InputText'
+import Input from './CustomInput'
 
 const UserRegistration = () => {
 

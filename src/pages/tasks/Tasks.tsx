@@ -1,4 +1,4 @@
-import New from './New';
+import New from './new';
 import axios from 'axios';
 import { Task, AllTasks } from '../../types/types';
 import { useQuery, useQueryClient } from '@tanstack/react-query';

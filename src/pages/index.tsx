@@ -1,5 +1,5 @@
 
-import Tasks from '@/pages/tasks/Tasks';
+import Tasks from '@/pages/tasks/tasks';
 import Header from '@/components/Header';
 
 export default function Home() {

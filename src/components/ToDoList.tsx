@@ -8,7 +8,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Form from './Form';
-import Input from './InputText';
+import Input from './CustomInput';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import taskSchema from '../schema/taskSchema';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
