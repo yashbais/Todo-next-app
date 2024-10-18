@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
-import TodoList from '../../components/TodoList';
+import TodoList from '../../components/ToDoList';
 import { Title } from '@mantine/core';
 import CustomButton from '../../components/CustomButton';
 import CustomModal from '../../components/CustomModal';
