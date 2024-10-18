@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import CustomTable from '../components/CustomTable';
 import { ColumnDef } from '@tanstack/react-table';
@@ -65,6 +65,13 @@ export const Default: Story = {
         const [sorting, setSorting] = useState([]);
 
         const totalPages = Math.ceil(mockData.length / limit);
+        
+        useEffect(() => {
+            if (page > totalPages) {
+                setPage(1);
+            }
+        }, [totalPages, page]);
+
         const handleSortingChange = (newSorting: any) => {
             setSorting(newSorting);
             setPage(1);
