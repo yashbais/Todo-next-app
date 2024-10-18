@@ -1,7 +1,7 @@
 import New from './new';
 import axios from 'axios';
 import { Task, AllTasks } from '../../types/types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import TodoList from '../../components/ToDoList';
 import React, { useState, useEffect } from 'react';
 import CustomModal from '../../components/CustomModal';
@@ -27,7 +27,6 @@ const fetchAllTasks = async ({ page, limit, sorting }: AllTasks) => {
 };
 
 const Tasks = () => {
-    const queryClient = useQueryClient();
     const { user } = useStore();
     const router = useRouter();
 
@@ -90,9 +89,6 @@ const Tasks = () => {
         }
     }, [page, limit, sorting]);
 
-    const handleRefetch = () => {
-        queryClient.invalidateQueries({ queryKey: ['tasks'] });
-    };
 
     return (
         <div className="flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96">
@@ -120,7 +116,7 @@ const Tasks = () => {
                     }
                 >
                     <div className="mt-4 flex justify-center item-center flex-col">
-                        <New fetchTasks={handleRefetch} setOpened={setOpened} />
+                        <New  setOpened={setOpened} />
                     </div>
                 </CustomModal>
             </div>
@@ -131,7 +127,6 @@ const Tasks = () => {
                 <div className="flex flex-col w-full lg:px-0 py-5">
                     <TodoList
                         tasks={data?.data?.tasks || fallbackArray}
-                        fetchTasks={handleRefetch}
                         totalPages={totalPages || 1}
                         page={page}
                         setPage={setPage}

@@ -3,7 +3,7 @@ import CustomButton from './CustomButton';
 import CustomModal from './CustomModal';
 import CustomTable from './CustomTable';
 import { TodoListProps, Task, TaskName } from '../types/types';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,8 +15,10 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { ActionIcon } from '@mantine/core';
 
 const TodoList: React.FC<TodoListProps> = ({ tasks,
-    fetchTasks, totalPages, page, setPage, limit,
+    totalPages, page, setPage, limit,
     setLimit, sorting, setSorting }) => {
+
+    const queryClient = useQueryClient();
 
     const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
@@ -51,7 +53,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
             return axios.delete(`/tasks/${id}`);
         },
         onSuccess: () => {
-            fetchTasks();
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             setOpenedTaskId(null);
             setTaskType('');
         },
@@ -65,7 +67,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
             return axios.put(`/tasks/${openedTaskId}`, { taskName: taskData.taskName });
         },
         onSuccess: () => {
-            fetchTasks();
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             setOpenedTaskId(null);
             setTaskType('');
         },

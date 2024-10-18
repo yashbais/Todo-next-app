@@ -24,12 +24,12 @@ export default meta;
 type Story = StoryObj<typeof CustomTable>;
 
 const mockData = [
-    { id: 1, taskName: 'Task 1' },
-    { id: 2, taskName: 'Task 2' },
-    { id: 3, taskName: 'Task 3' },
-    { id: 4, taskName: 'Task 4' },
-    { id: 5, taskName: 'Task 5' },
-    { id: 6, taskName: 'Task 6' },
+    { id: 1, taskName: 'Task 1' ,action : 'edit/delete'},
+    { id: 2, taskName: 'Task 2',action : 'edit/delete' },
+    { id: 3, taskName: 'Task 3',action : 'edit/delete' },
+    { id: 4, taskName: 'Task 4',action : 'edit/delete' },
+    { id: 5, taskName: 'Task 5',action : 'edit/delete' },
+    { id: 6, taskName: 'Task 6',action : 'edit/delete' },
 ];
 
 const mockColumns: ColumnDef<typeof mockData[number]>[] = [
@@ -42,6 +42,11 @@ const mockColumns: ColumnDef<typeof mockData[number]>[] = [
         accessorKey: 'taskName',
         header: () => <span>Task Name</span>,
         enableSorting: true,
+    },
+    {
+        accessorKey: 'action',
+        header: () => <span>Action</span>,
+        enableSorting: false,
     },
 ];
 

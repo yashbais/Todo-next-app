@@ -7,12 +7,15 @@ import taskSchema from '../../schema/taskSchema';
 import { TaskName,NewComponentProps } from '../../types/types';
 import { useRouter } from 'next/router';
 import { Title } from '@mantine/core';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation ,useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 
-const New = ({ fetchTasks, setOpened }: NewComponentProps) => {
+const New = ({  setOpened }: NewComponentProps) => {
     const router = useRouter();
-    
+    const isNewTaskPage = router.pathname.includes('/tasks/new');
+    const queryClient = useQueryClient();
+
+
     const {
         handleSubmit,
         formState: { errors },
@@ -26,9 +29,9 @@ const New = ({ fetchTasks, setOpened }: NewComponentProps) => {
             return axios.post('/tasks', newTask); 
         },
         onSuccess: (data) => {
-            // If fetchTasks is available, refetch tasks and close the modal
-            if (fetchTasks) {
-                fetchTasks();
+            //  invalidate tasks and close the modal
+            if (!isNewTaskPage) {
+                queryClient.invalidateQueries({ queryKey: ['tasks'] });
                 setOpened(false);
             } else {
                 // Navigate to the home page if task is created from a URL route
@@ -45,9 +48,9 @@ const New = ({ fetchTasks, setOpened }: NewComponentProps) => {
     };
 
     return (
-        <div className={`${!fetchTasks && 'flex items-center justify-center min-h-screen'}`}>
-            <div className={`${!fetchTasks && 'w-full max-w-md bg-white p-6 rounded-lg shadow-md'}`}>
-                {!fetchTasks && (
+        <div className={`${isNewTaskPage && 'flex items-center justify-center min-h-screen'}`}>
+            <div className={`${isNewTaskPage && 'w-full max-w-md bg-white p-6 rounded-lg shadow-md'}`}>
+                {isNewTaskPage && (
                     <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                         Add Task
                     </Title>

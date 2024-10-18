@@ -42,7 +42,6 @@ export interface CustomInputProps {
 
 export interface TodoListProps {
   tasks: Task[];
-  fetchTasks: () => void; 
   totalPages:number;
   page:number;
   setPage: (page: number) => void;
@@ -86,7 +85,6 @@ export interface CustomTableProps {
 }
 
 export interface NewComponentProps   {
-  fetchTasks: () => void;
   setOpened: (value: React.SetStateAction<boolean>) => void; 
 }
 
