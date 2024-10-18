@@ -25,7 +25,7 @@ export interface Task {
 export interface CommonModalProps {
   title: string;
   children: ReactNode;
-  trigger: ReactNode; 
+  trigger?: ReactNode; 
   opened : boolean;
   setOpened: (value: React.SetStateAction<boolean>) => void; 
 }

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Modal } from '@mantine/core';
 import { CommonModalProps } from '../types/types'
+import CustomButton from './CustomButton'
 
-const CommonModal = ({ title, children, trigger,opened,setOpened }: CommonModalProps) => {
+const CustomModal = ({ title, children, trigger, opened, setOpened }: CommonModalProps) => {
 
   return (
     <>
@@ -10,11 +11,18 @@ const CommonModal = ({ title, children, trigger,opened,setOpened }: CommonModalP
         {children}
       </Modal>
 
-      <div onClick={() => setOpened(true)}>
-        {trigger}
-      </div>
+      {trigger &&
+        <CustomButton
+          variant="filled"
+
+          radius="md"
+          onClick={() => setOpened(true)}
+        >
+          {trigger}
+        </CustomButton>
+      }
     </>
   );
 };
 
-export default CommonModal;
+export default CustomModal;

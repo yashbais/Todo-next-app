@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Task, TaskName } from '../../../types/types'
 import taskSchema from '@/schema/taskSchema'
@@ -12,6 +12,7 @@ const edit = () => {
 
     const router = useRouter()
     const { id } = router.query
+    const [error, setError] = useState(false)
 
     const {
         handleSubmit,
@@ -23,7 +24,6 @@ const edit = () => {
         resolver: yupResolver(taskSchema),
     });
 
-    const watchValues = watch()
 
     const fetchSingleTask = async () => {
         try {
@@ -34,9 +34,11 @@ const edit = () => {
                 setValue('taskName', data?.taskName)
             } else {
                 console.log("Failed to fetch task data");
+                setError(true)
             }
         } catch (error) {
             console.log(error);
+            setError(true)
         }
     };
 
@@ -72,14 +74,16 @@ const edit = () => {
         handleUpdate({ ...data })
     };
 
+
+
     return (
 
         <div className={`flex items-center justify-center min-h-screen`}>
-            {!watchValues?.taskName ?
+            {error ?
                 <div className={`w-full max-w-md bg-white p-6 rounded-lg shadow-md`}>
                     Oops no data found for this id: {id}
-                </div>
-                :
+                </div> :
+
                 <div className={`w-full max-w-md bg-white p-6 rounded-lg shadow-md`}>
                     <Title order={1} className="text-xl md:text-2xl" lineClamp={2}>
                         Edit Task
@@ -99,7 +103,8 @@ const edit = () => {
                             register={register}
                         />
                     </Form>
-                </div>}
+                </div>
+            }
         </div>
     )
 }

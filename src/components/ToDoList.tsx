@@ -5,7 +5,7 @@ import CommonModal from './CustomModal';
 import { TodoListProps } from '../types/types';
 import { useRouter } from 'next/router'
 
-const TodoList: React.FC<TodoListProps> = ({ tasks,fetchTasks }) => {
+const TodoList: React.FC<TodoListProps> = ({ tasks, fetchTasks }) => {
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
     const [error, setError] = useState<string>("");
     const [taskType, setTaskType] = useState("");
@@ -110,24 +110,27 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,fetchTasks }) => {
                             </div>
 
                             {/* Modal for deleting task */}
-                            <CommonModal
-                                setOpened={(open) => setOpenedTaskId(open ? task.id : null)}
-                                opened={openedTaskId === task.id}
-                                title={`${taskType} Task`}
-                                trigger={<></>}
-                            >
-                                <div className="mt-4 flex justify-center item-center flex-col  ">
-                                    <p className="pb-4 text-center">Are you sure you want to delete the task?</p>
-                                    <CustomButton
-                                        variant="filled"
-                                        color="red"
-                                        radius="md"
-                                        onClick={handleDeleteData}
-                                    >
-                                        Delete
-                                    </CustomButton>
-                                </div>
-                            </CommonModal>
+                            {openedTaskId != null &&
+                                <CommonModal
+                                    setOpened={(open) => setOpenedTaskId(open ? task.id : null)}
+                                    opened={openedTaskId === task.id}
+                                    title={`${taskType} Task`}
+                                    trigger={<></>}
+                                >
+                                    <div className="mt-4 flex justify-center item-center flex-col  ">
+                                        <p className="pb-4 text-center">Are you sure you want to delete the task?</p>
+                                        <CustomButton
+                                            variant="filled"
+                                            color="red"
+                                            radius="md"
+                                            onClick={handleDeleteData}
+                                        >
+                                            Delete
+                                        </CustomButton>
+                                    </div>
+                                </CommonModal>
+                            }
+
                         </div>
                     ))}
                 </div>
