@@ -71,23 +71,36 @@ const Tasks = () => {
         }
     }, [data]);
 
-    // Update URL query params when page, limit, or sorting changes
-    useEffect(() => {
-        if (page && limit) {
-            const queryParams = {
-                page: page.toString(),
-                limit: limit.toString(),
-                ...(sorting.length && {
-                    sortBy: sorting[0].id,
-                    sortOrder: sorting[0].desc ? 'desc' : 'asc',
-                }),
-            };
+    useEffect(() => {    
+        const currentQueryParams = {
+            page: router.query.page || '1',
+            limit: router.query.limit || '5',
+            sortBy: router.query.sortBy,
+            sortOrder: router.query.sortOrder,
+        };
+    
+        const newQueryParams = {
+            page: page.toString(),
+            limit: limit.toString(),
+            ...(sorting.length && {
+                sortBy: sorting[0].id,
+                sortOrder: sorting[0].desc ? 'desc' : 'asc',
+            }),
+        };
+    
+        if (
+            currentQueryParams.page !== newQueryParams.page ||
+            currentQueryParams.limit !== newQueryParams.limit ||
+            currentQueryParams.sortBy !== newQueryParams.sortBy ||
+            currentQueryParams.sortOrder !== newQueryParams.sortOrder
+        ) {
             router.push({
                 pathname: router.pathname,
-                query: queryParams,
-            }, undefined, { shallow: true }); // Use shallow routing to avoid full page reload
+                query: newQueryParams,
+            }, undefined, { shallow: true });
         }
     }, [page, limit, sorting]);
+    
 
 
     return (
