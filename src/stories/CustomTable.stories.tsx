@@ -24,12 +24,12 @@ export default meta;
 type Story = StoryObj<typeof CustomTable>;
 
 const mockData = [
-    { id: 1, taskName: 'Task 1' ,action : 'edit/delete'},
-    { id: 2, taskName: 'Task 2',action : 'edit/delete' },
-    { id: 3, taskName: 'Task 3',action : 'edit/delete' },
-    { id: 4, taskName: 'Task 4',action : 'edit/delete' },
-    { id: 5, taskName: 'Task 5',action : 'edit/delete' },
-    { id: 6, taskName: 'Task 6',action : 'edit/delete' },
+    { id: 1, taskName: 'Login on hubstaff',action : 'edit/delete'},
+    { id: 2, taskName: 'Singin on slack',action : 'edit/delete' },
+    { id: 3, taskName: 'Check mails and msgs on slack',action : 'edit/delete' },
+    { id: 4, taskName: 'Review feedbacks of pr',action : 'edit/delete' },
+    { id: 5, taskName: 'Documnet new learnings',action : 'edit/delete' },
+    { id: 6, taskName: 'Do the tasks',action : 'edit/delete' },
 ];
 
 const mockColumns: ColumnDef<typeof mockData[number]>[] = [

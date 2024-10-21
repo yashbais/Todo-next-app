@@ -22,7 +22,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
 
     const [taskType, setTaskType] = useState('');
     const [openedTaskId, setOpenedTaskId] = useState<number | null>(null);
-    const [queryEnabled, setQueryEnabled] = useState(false);
 
     const {
         handleSubmit,
@@ -37,13 +36,12 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
     const { data } = useQuery({
         queryKey: ['tasks', openedTaskId],
         queryFn: () => axios.get(`/tasks/${openedTaskId}`),
-        enabled: queryEnabled,
+        enabled: !!openedTaskId,
     });
 
     useEffect(() => {
         if (data) {
             setValue('taskName', data?.data?.taskName);
-            setQueryEnabled(false);
         }
     }, [data]);
 
@@ -83,7 +81,6 @@ const TodoList: React.FC<TodoListProps> = ({ tasks,
     };
 
     const handleEdit = (taskId: number) => {
-        setQueryEnabled(true);
         setTaskType('Edit');
         setOpenedTaskId(taskId);
     };

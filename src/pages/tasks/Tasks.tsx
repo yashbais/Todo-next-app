@@ -31,11 +31,11 @@ const Tasks = () => {
     const router = useRouter();
 
     const [opened, setOpened] = useState(false);
-    const [queryEnabled, setQueryEnabled] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(5);
     const [sorting, setSorting] = useState<SortingState>([]);
+    // const [queryEnabled, setQueryEnabled] = useState(false);
 
     // Set state from URL query params on component mount
     useEffect(() => {
@@ -46,30 +46,6 @@ const Tasks = () => {
             setSorting([{ id: sortBy as string, desc: sortOrder === 'desc' }]);
         }
     }, [router.query]);
-
-    // Delay query by 2 seconds to initialize MSW
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setQueryEnabled(true);
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, []);
-
-    const { data, isLoading, isFetching } = useQuery({
-        queryKey: ['tasks', page, limit, sorting],
-        queryFn: () => fetchAllTasks({ page, limit, sorting }),
-        enabled: queryEnabled,
-        refetchOnWindowFocus: false,
-    });
-
-    useEffect(() => {
-        if (data) {
-            setTotalPages(data?.data?.totalPages || 1);
-            if (data?.data?.totalPages < data?.data?.currentPage) {
-                setPage(data?.data?.currentPage - 1);
-            }
-        }
-    }, [data]);
 
     useEffect(() => {    
         const currentQueryParams = {
@@ -100,8 +76,31 @@ const Tasks = () => {
             }, undefined, { shallow: true });
         }
     }, [page, limit, sorting]);
-    
 
+
+    // Delay query by 2 seconds to initialize MSW
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setQueryEnabled(true);
+    //     }, 2000);
+    //     return () => clearTimeout(timer);
+    // }, []);
+
+    const { data, isLoading, isFetching } = useQuery({
+        queryKey: ['tasks', page, limit, sorting],
+        queryFn: () => fetchAllTasks({ page, limit, sorting }),
+        // enabled: queryEnabled,
+        refetchOnWindowFocus: false,
+    });
+
+    useEffect(() => {
+        if (data) {
+            setTotalPages(data?.data?.totalPages || 1);
+            if (data?.data?.totalPages < data?.data?.currentPage) {
+                setPage(data?.data?.currentPage - 1);
+            }
+        }
+    }, [data]);
 
     return (
         <div className="flex flex-col items-center gap-2 px-4 sm:px-6 lg:px-8 xl:px-96">
